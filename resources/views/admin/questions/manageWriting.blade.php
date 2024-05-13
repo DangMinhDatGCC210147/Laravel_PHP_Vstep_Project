@@ -19,7 +19,7 @@
             </div>
             <div class="col-lg-12">
                 <a href="{{ route('testSkills.show', $test_slug->slug) }}" class="btn btn-secondary">
-                    <i class="mdi mdi-backburger"></i> Turn back to previous page
+                    <i class="mdi mdi-arrow-left-bold"></i> Turn back to previous page
                 </a>
             </div>            
         </div>

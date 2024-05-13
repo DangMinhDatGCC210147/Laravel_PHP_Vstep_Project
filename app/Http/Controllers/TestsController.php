@@ -111,7 +111,6 @@ class TestsController extends Controller
      */
     public function edit(Test $test_slug)
     {
-        // dd($test_slug->all());
         $lecturers = User::all(); // Assuming you have a Lecturer model
         return view('admin.createTest', compact('test_slug', 'lecturers'));
     }
@@ -125,7 +124,6 @@ class TestsController extends Controller
         // Validate the incoming request data
         $validatedData = $request->validate([
             'test_code' => 'required|string',
-            'test_name' => 'required|string',
             'duration' => 'required|string',
             'start_date' => 'required|date',
             'end_date' => 'required|date',
@@ -156,7 +154,7 @@ class TestsController extends Controller
 
         switch ($skill->skill_name) {
             case 'Listening':
-                return view('admin.questions.manageListening', compact('test', 'skill', 'passages', 'test_slug'));
+                return view('admin.questions.manageListening', compact('test', 'skill', 'passages', 'test_slug', 'skill_slug'));
             case 'Speaking':
                 return view('admin.questions.manageSpeaking', compact('test', 'skill', 'passages', 'test_slug'));
             case 'Reading':
@@ -164,7 +162,7 @@ class TestsController extends Controller
             case 'Writing':
                 return view('admin.questions.manageWriting', compact('test', 'skill', 'passages', 'test_slug', 'skill_slug'));
             default:
-                abort(404); // Trường hợp không tìm thấy kỹ năng phù hợp
+                abort(404);
         }
     }
 
@@ -178,9 +176,9 @@ class TestsController extends Controller
 
         switch ($skill_slug->skill_name) {
             case 'Listening':
-                return view('admin.questions.manageListening', compact('test', 'skill', 'test_slug', 'skill_slug', 'passages'));
+                return view('admin.questions.manageListening', compact('test_slug', 'skill_slug', 'passages', 'questions'));
             case 'Speaking':
-                return view('admin.questions.manageSpeaking', compact('test', 'skill', 'test_slug', 'skill_slug', 'passages'));
+                return view('admin.questions.manageSpeaking', compact('test_slug', 'skill_slug', 'passages'));
             case 'Reading':
                 return view('admin.questions.manageReading', compact('test_slug', 'skill_slug', 'passages', 'questions'));
             case 'Writing':

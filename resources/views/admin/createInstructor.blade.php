@@ -18,8 +18,8 @@
     </div>
     <div class="py-3 py-lg-4">
         <div class="row">
-            <div class="col-lg-12"><a href="{{ route('tableLecturer.index') }}">
-                <i class="mdi mdi-backburger"></i> Turn back to previous page</a></div>
+            <div class="col-lg-6"><a class="btn btn-secondary" href="{{ route('tableLecturer.index') }}">
+                    <i class="mdi mdi-arrow-left-bold"></i> Turn back to previous page</a></div>
         </div>
     </div>
     <div class="row mt-2">
@@ -61,13 +61,16 @@
                                                 value="{{ isset($user) ? $user->lecturer_id : '' }}" required>
                                         </div>
                                     </div>
+                                    @if (!isset($user))
                                         <div class="mb-2 row">
                                             <label class="col-md-2 col-form-label" for="example-password">Password</label>
                                             <div class="col-md-10">
                                                 <input type="password" class="form-control" id="example-password"
-                                                    value="" placeholder="Password" name="password" required>
+                                                    value="" placeholder="Password" name="password"
+                                                    {{ isset($user) ? 'hidden' : 'required' }}>
                                             </div>
                                         </div>
+                                    @endif
                                     <div class="mb-2 row">
                                         <div class="col-md-2"></div>
                                         <div class="col-md-10">

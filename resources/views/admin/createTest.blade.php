@@ -17,7 +17,11 @@
         </div>
     </div>
     <div class="row">
-        <a href="{{ route('tableTest.index') }}">Turn back to previous page</a>
+        <div class="col-md-6">
+            <a class="btn btn-secondary" href="{{ route('tableTest.index') }}">
+                <i class="mdi mdi-arrow-left-bold"></i>Turn back to previous page
+            </a>
+        </div>
     </div>
     <div class="row mt-2">
         <div class="col-12">
@@ -33,16 +37,16 @@
                                         @method('PUT')
                                     @endif
                                     <div class="mb-2 row">
-                                        <label class="col-md-2 col-form-label" for="simpleinput">Test Code</label>
-                                        <div class="col-md-10">
-                                            <input type="text" id="simpleinput" class="form-control" value="{{ $test_slug->test_code ?? '' }}" name="test_code" required>
-                                        </div>
-                                    </div>
-                                    <div class="mb-2 row">
                                         <label class="col-md-2 col-form-label" for="simpleinput">Test Name</label>
                                         <div class="col-md-10">
                                             <input type="text" id="simpleinput" class="form-control" value="{{ $test_slug->test_name ?? '' }}"
-                                                placeholder="Test Name" name="test_name" required>
+                                                placeholder="Test Name" name="test_name" required {{ isset($test_slug->id) ? "readonly disabled style=background-color:#524C42" : "" }}>
+                                        </div>
+                                    </div>
+                                    <div class="mb-2 row">
+                                        <label class="col-md-2 col-form-label" for="simpleinput">Test Code</label>
+                                        <div class="col-md-10">
+                                            <input type="text" placeholder="Test Code" id="simpleinput" class="form-control" value="{{ $test_slug->test_code ?? '' }}" name="test_code" required>
                                         </div>
                                     </div>
                                     <div class="mb-2 row">

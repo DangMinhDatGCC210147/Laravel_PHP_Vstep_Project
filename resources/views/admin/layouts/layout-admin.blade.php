@@ -25,6 +25,7 @@
         rel="stylesheet" type="text/css" />
     <link href="{{ asset('admin/assets/libs/datatables.net-select-bs5/css//select.bootstrap5.min.css') }}"
         rel="stylesheet" type="text/css" />
+        <link href="{{ asset('admin/assets/libs/dropzone/min/dropzone.min.css" rel="stylesheet')}}" type="text/css" />
 </head>
 <!-- Begin page -->
 <div class="layout-wrapper">
@@ -521,7 +522,10 @@
     <!-- third party js ends -->
     <!-- Sweet Alerts js -->
     <script src="{{ asset('admin/assets/libs/sweetalert2/sweetalert2.all.min.js') }}"></script>
+    <script src="{{ asset('admin/assets/libs/dropzone/min/dropzone.min.js') }}"></script>
 
+    <!-- Demo js-->
+    <script src="{{ asset('admin/assets/js/pages/form-fileuploads.js') }}"></script>
     <!-- Sweet alert Demo js-->
     <script src="{{ asset('admin/assets/js/pages/sweet-alerts.js') }}"></script>
     <!-- Datatables js -->

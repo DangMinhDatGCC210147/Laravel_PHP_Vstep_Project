@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\IndexAdminController;
 use App\Http\Controllers\InstructorsController;
+use App\Http\Controllers\ListeningController;
 use App\Http\Controllers\ReadingController;
 use App\Http\Controllers\TestsController;
 use App\Http\Controllers\WritingController;
@@ -33,17 +34,18 @@ Route::get('/tests/{test_slug}/skills/{skill_slug}/parts', [TestsController::cla
 
 
 //VIEW INPUT QUESTION FOR READING
-// Route::get('/test/{test_slug}/skills/{skill_slug}/view', [ReadingController::class, 'readingDetail'])->name('test.reading.detail');
 Route::get('/test/{test_slug}/skills/{skill_slug}/view', [TestsController::class, 'addSkillQuestions'])->name('skill.add.questions');
 Route::get('/edit-skill/{test_slug}/{skill_slug}/edit', [TestsController::class, 'editSkillQuestions'])->name('skill.edit.questions');
 
 
-//FUNCTIONS FOR READING
+//FUNCTIONS FOR SAVE AND UPDATE READING
 Route::post('/save-reading/{test_slug}/{skill_id}/reading', [ReadingController::class, 'storeReading'])->name('reading.questions.store');
-// Route::get('/edit-reading/{test_slug}/{skill_slug}/reading/edit', [ReadingController::class, 'editReading'])->name('reading.edit');
 Route::put('/edit-reading/{test_slug}/{skill_slug}/update', [ReadingController::class, 'updateReading'])->name('reading.questions.update');
 
-//FUNCTIONS FOR WRITING
+//FUNCTIONS FOR SAVE AND UPDATE WRITING
 Route::post('/save-writing/{test_slug}/{skill_id}/writing', [WritingController::class, 'storeWriting'])->name('writing.questions.store');
-// Route::get('/edit-writing/{test_slug}/{skill_slug}/writing/edit', [WritingController::class, 'editWriting'])->name('writing.edit');
 Route::put('/update-writing/{test_slug}/{skill_slug}/update', [WritingController::class, 'updateWriting'])->name('writing.questions.update');
+
+//FUNCTIONS FOR SAVE AND UPDATE LISTENING
+Route::post('/save-listening/{test_slug}/{skill_id}/listening', [ListeningController::class, 'storeListening'])->name('listening.questions.store');
+Route::put('/update-listening/{test_slug}/{skill_slug}/update', [ListeningController::class, 'updateListening'])->name('listening.questions.update');

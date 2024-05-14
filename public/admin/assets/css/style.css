@@ -19195,3 +19195,13 @@ span.flatpickr-weekday,
 .waves-block {
   display: block;
 }
+
+
+.audio-wrapper {
+  width: 100%; 
+  padding: 10px;
+}
+audio {
+  width: 100%;
+  outline: none;   
+}

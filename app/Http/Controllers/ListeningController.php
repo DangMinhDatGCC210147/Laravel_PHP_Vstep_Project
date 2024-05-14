@@ -18,7 +18,7 @@ class ListeningController extends Controller
             $audioPaths = [];
             for ($part = 1; $part <= 3; $part++) {
                 if ($request->hasFile("audio_file.$part")) {
-                    $audioPath = $request->file("audio_file.$part")->store('public/audios');
+                    $audioPath = $request->file("audio_file.$part")->store('audios', 'public');
                     $audioPaths[$part] = $audioPath;
                 }
             }
@@ -68,7 +68,63 @@ class ListeningController extends Controller
 
 
 
-    public function updateListening()
+    public function updateListening(Request $request, Test $test_slug, TestSkill $skill_slug)
     {
+
+        try {
+            $audioPaths = [];
+            // Handle file updates for each audio part
+            for ($part = 1; $part <= 3; $part++) {
+                if ($request->hasFile("audio_file.$part")) {
+                    $audioPath = $request->file("audio_file.$part")->store('audios', 'public');
+                    $audioPaths[$part] = $audioPath;
+                }
+            }
+
+            $partRanges = [
+                1 => ['start' => 1, 'end' => 8],
+                2 => ['start' => 9, 'end' => 20],
+                3 => ['start' => 21, 'end' => 35]
+            ];
+
+            // Update each part's questions
+            foreach ($partRanges as $part => $range) {
+                $listeningAudio = ReadingsAudio::where('test_skill_id', $skill_slug->id)
+                    ->where('id', $part)
+                    ->firstOrFail();
+                // Update audio file path if a new file was uploaded
+                if (!empty($audioPaths[$part])) {
+                    $listeningAudio->reading_audio_file = $audioPaths[$part];
+                }
+                $listeningAudio->save();
+
+                for ($q = $range['start']; $q <= $range['end']; $q++) {
+                    $questionData = $request->questions[$q];
+                    $question = Question::where('reading_audio_id', $listeningAudio->id)
+                        ->where('question_number', $q)
+                        ->firstOrFail();
+
+                    $question->question_text = $questionData['text'];
+                    $question->correct_answer = $questionData['options'][$questionData['correct_answer']];
+                    $question->save();
+
+                    // Update options for the question
+                    if (isset($questionData['options'])) {
+                        foreach ($questionData['options'] as $optionId => $optionText) {
+                            $option = Option::findOrFail($optionId);
+                            $option->option_text = $optionText;
+                            $option->save();
+                        }
+                    }
+                }
+            }
+
+            return redirect()->route('testSkills.show', ['test_slug' => $test_slug->slug])
+                ->with('success', 'Listening parts and questions updated successfully!');
+        } catch (\Exception $e) {
+            return back()->withErrors('Error updating the listening parts: ' . $e->getMessage());
+        }
     }
+
+
 }

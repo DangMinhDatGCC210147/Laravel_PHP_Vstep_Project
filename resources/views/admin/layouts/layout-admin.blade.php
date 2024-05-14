@@ -15,6 +15,7 @@
     <link href="{{ asset('admin/assets/libs/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet" type="text/css" />
     <!-- App css -->
     <link href="{{ asset('admin/assets/css/style.min.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ asset('admin/assets/css/style.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ asset('admin/assets/css/icons.min.css') }}" rel="stylesheet" type="text/css">
     <script src="{{ asset('admin/assets/js/config.js') }}"></script>
     <link href="{{ asset('admin/assets/libs/datatables.net-bs5/css/dataTables.bootstrap5.min.css') }}" rel="stylesheet"

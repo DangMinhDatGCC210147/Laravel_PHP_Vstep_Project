@@ -102,58 +102,55 @@ class SpeakingController extends Controller
     public function updateSpeaking(Request $request, Test $test_slug, TestSkill $skill_slug)
     {
         try {
-            // Cập nhật câu hỏi Part 1
             $part1Questions = Question::where('part_name', 'Part 1')
                 ->where('test_skill_id', $skill_slug->id)
-                ->get(); // Lấy tất cả câu hỏi Part 1
+                ->get();
             foreach ($part1Questions as $question) {
-                $index = $question->question_number; // Giả sử question_number là thứ tự của câu hỏi
+                $index = $question->question_number;
                 $questionKey = "part1_question_{$index}";
                 if ($request->has($questionKey)) {
                     $question->question_text = $request->input($questionKey);
                     $question->save();
-                    // dd($questionKey);
-                    // Cập nhật các tùy chọn
-                    for ($j = 1; $j <= 3; $j++) { // Giả sử mỗi câu hỏi có tối đa 3 lựa chọn
-                        $optionKey = "{$questionKey}_option_{$j}";
+
+                    // Cập nhật các tùy chọn dựa trên index của mỗi option
+                    $options = $question->options;
+                    for ($j = 0; $j < $options->count(); $j++) {
+                        $optionKey = "{$questionKey}_option_" . ($j + 1);
                         if ($request->has($optionKey)) {
-                            $option = $question->options()->where('option_number', $j)->first(); // Giả sử có trường option_number
-                            if ($option) {
-                                $option->option_text = $request->input($optionKey);
-                                $option->save();
-                            }
+                            $options[$j]->option_text = $request->input($optionKey);
+                            $options[$j]->save();
                         }
                     }
                 }
             }
 
             // Cập nhật câu hỏi Part 2
-            $part2Question = Question::where('part_name', 'Part 2')->first();
+            $part2Question = Question::where('part_name', 'Part 2')->where('test_skill_id', $skill_slug->id)->first();
             if ($part2Question && $request->has('part2_text')) {
-                $part2Question->question_text = $request->part2_text;
+                $part2Question->question_text = $request->input('part2_text');
                 $part2Question->save();
             }
 
             // Cập nhật câu hỏi và hình ảnh Part 3
-            $part3Question = Question::where('part_name', 'Part 3')->first();
+            $part3Question = Question::where('part_name', 'Part 3')->where('test_skill_id', $skill_slug->id)->first();
             if ($part3Question && $request->has('part3_question')) {
-                $part3Question->question_text = $request->part3_question;
+                $part3Question->question_text = $request->input('part3_question');
                 $part3Question->save();
-
-                // Cập nhật hình ảnh nếu có
                 if ($request->hasFile('part3_image')) {
-                    $path = $request->file('part3_image')->store('public/images');
-                    $part3Question->image = $path;
-                    $part3Question->save();
+                    $path = $request->file('part3_image')->store('images', 'public');
+                    $readingAudio = ReadingsAudio::where('test_skill_id', $skill_slug->id)
+                        ->where('id', $part3Question->reading_audio_id)
+                        ->firstOrFail();
+                    $readingAudio->reading_audio_file = $path;
+                    $readingAudio->save();
                 }
 
-                // Cập nhật các tùy chọn của Part 3
-                $options = $request->input('part3_option');
-                foreach ($options as $k => $optionText) {
-                    $option = $part3Question->options()->skip($k)->first();
-                    if ($option) {
-                        $option->option_text = $optionText;
-                        $option->save();
+                $options = $part3Question->options;
+                for ($k = 0; $k < $options->count(); $k++) {
+                    $optionKey = "part3_option_" . ($k + 1);
+                    if ($request->has($optionKey)) {
+                        $options[$k]->option_text = $request->input($optionKey);
+                        $options[$k]->save();
                     }
                 }
             }

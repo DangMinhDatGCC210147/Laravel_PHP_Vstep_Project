@@ -150,7 +150,7 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Current Image</label>
-                            <div class="d-flex justify-content-center mb-5"><img src="{{ asset('storage/' . $passages[5]->reading_audio_file) }}" alt="Uploaded Image"
+                            <div class="d-flex justify-content-center mb-5"><img src="{{ asset('storage/' . $passages[3]->reading_audio_file) }}" alt="Uploaded Image"
                                     style="max-height: 200px;"></div>
                             <label class="form-label">Change file</label>
                             <input type="file" name="part3_image" class="form-control" accept="image/*">

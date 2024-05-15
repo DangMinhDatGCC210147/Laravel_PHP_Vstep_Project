@@ -153,7 +153,7 @@
                     @foreach ($passages as $index => $passage)
                         <div class="mb-4">
                             <div class="d-flex justify-content-center"><h3>PART {{ $index + 1 }} - Listening Skill - {{ $test_slug->test_name }}</h3></div>
-                            <input type="file" name="audio_file[{{ $index + 1 }}]" class="form-control mb-2">
+                            <input type="file" name="audio_file[{{ $passage->id }}]" class="form-control mb-2">
                             <div class="mb-2 audio-wrapper">
                                 {{-- <label>Current Audio File:</label> --}}
                                 <audio controls>
@@ -191,7 +191,6 @@
                             @endforeach
                         </div>
                     @endforeach
-    
                     <div class="buttons d-flex justify-content-center">
                         <button type="submit" class="btn btn-warning">Save Changes</button>
                     </div>

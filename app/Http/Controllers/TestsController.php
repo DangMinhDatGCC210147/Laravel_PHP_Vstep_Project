@@ -156,7 +156,7 @@ class TestsController extends Controller
             case 'Listening':
                 return view('admin.questions.manageListening', compact('test', 'skill', 'passages', 'test_slug', 'skill_slug'));
             case 'Speaking':
-                return view('admin.questions.manageSpeaking', compact('test', 'skill', 'passages', 'test_slug'));
+                return view('admin.questions.manageSpeaking', compact('test', 'skill', 'passages', 'test_slug', 'skill_slug'));
             case 'Reading':
                 return view('admin.questions.manageReading', compact('test', 'skill', 'passages', 'test_slug', 'skill_slug'));
             case 'Writing':
@@ -173,12 +173,13 @@ class TestsController extends Controller
         
         $passages = ReadingsAudio::where('test_skill_id', $skill_slug->id)->get();
         $questions = Question::with('options')->where('test_skill_id', $skill_slug->id)->get();
+        // dd($passages, $questions);
 
         switch ($skill_slug->skill_name) {
             case 'Listening':
                 return view('admin.questions.manageListening', compact('test_slug', 'skill_slug', 'passages', 'questions'));
             case 'Speaking':
-                return view('admin.questions.manageSpeaking', compact('test_slug', 'skill_slug', 'passages'));
+                return view('admin.questions.manageSpeaking', compact('test_slug', 'skill_slug', 'passages', 'questions'));
             case 'Reading':
                 return view('admin.questions.manageReading', compact('test_slug', 'skill_slug', 'passages', 'questions'));
             case 'Writing':

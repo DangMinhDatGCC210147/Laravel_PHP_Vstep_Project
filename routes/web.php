@@ -5,6 +5,7 @@ use App\Http\Controllers\IndexAdminController;
 use App\Http\Controllers\InstructorsController;
 use App\Http\Controllers\ListeningController;
 use App\Http\Controllers\ReadingController;
+use App\Http\Controllers\SpeakingController;
 use App\Http\Controllers\TestsController;
 use App\Http\Controllers\WritingController;
 use Illuminate\Support\Facades\Route;
@@ -49,3 +50,7 @@ Route::put('/update-writing/{test_slug}/{skill_slug}/update', [WritingController
 //FUNCTIONS FOR SAVE AND UPDATE LISTENING
 Route::post('/save-listening/{test_slug}/{skill_id}/listening', [ListeningController::class, 'storeListening'])->name('listening.questions.store');
 Route::put('/update-listening/{test_slug}/{skill_slug}/update', [ListeningController::class, 'updateListening'])->name('listening.questions.update');
+
+//FUNCTIONS FOR SAVE AND UPDATE SPEAKING
+Route::post('/save-speaking/{test_slug}/{skill_id}/speaking', [SpeakingController::class, 'storeSpeaking'])->name('speaking.questions.store');
+Route::put('/update-speaking/{test_slug}/{skill_slug}/update', [SpeakingController::class, 'updateSpeaking'])->name('speaking.questions.update');

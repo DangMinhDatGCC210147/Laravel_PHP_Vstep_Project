@@ -24,18 +24,8 @@
                 <div class="card">
                     <div class="card-body p-4">
 
-                        <div class="text-center w-75 mx-auto auth-logo mb-4">
-                            <a href="index.html" class="logo-dark">
-                                <span><img src="assets/images/logo-dark.png" alt="" height="22"></span>
-                            </a>
-
-                            <a href="index.html" class="logo-light">
-                                <span><img src="assets/images/logo-light.png" alt="" height="22"></span>
-                            </a>
-                        </div>
-
                         <div class="text-center w-50 mx-auto my-4">
-                            <img src="assets/images/500-error.svg" title="invite.svg">
+                            <img src="{{ asset('admin/assets/images/500-error.svg') }}" title="invite.svg">
                         </div>
 
                         <h3 class="text-center mb-4 mt-3">Internal Server Error</h3>

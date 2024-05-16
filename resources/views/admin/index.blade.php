@@ -1,5 +1,5 @@
 @extends('admin.layouts.layout-admin')
-
+@section('title', 'Lecture Index')
 @section('content')
     <!-- start page title -->
     <div class="py-3 py-lg-4">

@@ -80,4 +80,33 @@
         </div><!-- end col-->
     </div>
     <!-- end row-->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Check if there is a success message in the session
+            @if(session('success'))
+                Swal.fire({
+                    title: 'Success!',
+                    text: '{{ session('success') }}',
+                    icon: 'success',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    showClass: {
+                        popup: `
+                        animate__animated
+                        animate__fadeInUp
+                        animate__faster
+                        `
+                    },
+                    hideClass: {
+                        popup: `
+                        animate__animated
+                        animate__fadeOutDown
+                        animate__faster
+                        `
+                    }
+                });
+            @endif
+        });
+        </script>   
 @endsection

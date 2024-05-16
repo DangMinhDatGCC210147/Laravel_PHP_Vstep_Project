@@ -24,9 +24,10 @@
         rel="stylesheet" type="text/css" />
     <link href="{{ asset('admin/assets/libs/datatables.net-buttons-bs5/css/buttons.bootstrap5.min.css') }}"
         rel="stylesheet" type="text/css" />
-    <link href="{{ asset('admin/assets/libs/datatables.net-select-bs5/css//select.bootstrap5.min.css') }}"
+    <link href="{{ asset('admin/assets/libs/datatables.net-select-bs5/css/select.bootstrap5.min.css') }}"
         rel="stylesheet" type="text/css" />
         <link href="{{ asset('admin/assets/libs/dropzone/min/dropzone.min.css" rel="stylesheet')}}" type="text/css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 </head>
 <!-- Begin page -->
 <div class="layout-wrapper">
@@ -528,7 +529,8 @@
     <!-- Demo js-->
     <script src="{{ asset('admin/assets/js/pages/form-fileuploads.js') }}"></script>
     <!-- Sweet alert Demo js-->
-    <script src="{{ asset('admin/assets/js/pages/sweet-alerts.js') }}"></script>
+    {{-- <script src="{{ asset('admin/assets/js/pages/sweet-alerts.js') }}"></script> --}}
     <!-- Datatables js -->
     <script src="{{ asset('admin/assets/js/pages/datatables.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </div>

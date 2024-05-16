@@ -73,7 +73,7 @@
                                             <select class="form-control" name="instructor_id" required>
                                                 <option selected disabled>Click to choose</option>
                                                 @foreach($lecturers as $lecturer)
-                                                    <option value="{{ $lecturer->id}}" {{ (isset($test_slug) && $lecturer->id == $lecturer->id) ? 'selected' : '' }}>{{ $lecturer->name}}</option>
+                                                    <option value="{{ $lecturer->id}}" {{ (isset($test_slug) && $lecturer->id == $test_slug->id) ? 'selected' : '' }}>{{ $lecturer->name}}</option>
                                                 @endforeach
                                             </select>                                            
                                         </div>

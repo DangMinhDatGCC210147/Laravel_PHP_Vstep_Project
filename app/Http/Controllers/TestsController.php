@@ -63,10 +63,10 @@ class TestsController extends Controller
 
         // Define the skills data
         $skills = [
-            ['skill_name' => 'Speaking', 'time_limit' => '00:15:00', 'question_count' => 0, 'part_count' => 3],
+            ['skill_name' => 'Speaking', 'time_limit' => '00:12:00', 'question_count' => 0, 'part_count' => 3],
             ['skill_name' => 'Writing', 'time_limit' => '01:00:00', 'question_count' => 0, 'part_count' => 2],
             ['skill_name' => 'Reading', 'time_limit' => '01:00:00', 'question_count' => 0, 'part_count' => 4],
-            ['skill_name' => 'Listening', 'time_limit' => '00:40:00', 'question_count' => 0, 'part_count' => 3],
+            ['skill_name' => 'Listening', 'time_limit' => '00:47:00', 'question_count' => 0, 'part_count' => 3],
         ];
 
         // Create each skill linked to the test
@@ -78,13 +78,6 @@ class TestsController extends Controller
             $testSkill->question_count = $skill['question_count'];
             $testSkill->save();
 
-            // // Create parts for each skill
-            // for ($i = 1; $i <= $skill['part_count']; $i++) {
-            //     $skillPart = new SkillPart();
-            //     $skillPart->test_skill_id = $testSkill->id;
-            //     $skillPart->part_name = 'Part ' . $i;
-            //     $skillPart->save();
-            // }
         }
 
         return redirect()->route('tableTest.index')->with('success', 'Test and associated skills and parts created successfully!');

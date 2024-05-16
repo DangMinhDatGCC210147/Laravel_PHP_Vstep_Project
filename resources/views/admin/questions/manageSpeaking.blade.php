@@ -154,6 +154,9 @@
                                     style="max-height: 200px;"></div>
                             <label class="form-label">Change file</label>
                             <input type="file" name="part3_image" class="form-control" accept="image/*">
+                            <div class="invalid-feedback">
+                                Please choose a username.
+                            </div>
                         </div>
                         @foreach ($questions[3]->options as $k => $option)
                             <div class="mb-1">

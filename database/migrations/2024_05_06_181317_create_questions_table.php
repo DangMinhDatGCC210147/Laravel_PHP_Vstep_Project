@@ -27,7 +27,7 @@ return new class extends Migration
             $table->string('part_name')->nullable();  
             $table->longText('question_text');
             $table->string('question_type');
-            $table->string('correct_answer')->nullable();
+            $table->longText('correct_answer')->nullable();
             $table->timestamps();
         });        
     }

@@ -20,6 +20,7 @@ class User extends Authenticatable
         'name',
         'email',
         'lecturer_id',
+        'student_id',
         'password',
     ];
 
@@ -58,7 +59,7 @@ class User extends Authenticatable
     {
         return [
             'slug' => [
-                'source' => ['name', 'lecturer_id']
+                'source' => 'name'
             ]
         ];
     }

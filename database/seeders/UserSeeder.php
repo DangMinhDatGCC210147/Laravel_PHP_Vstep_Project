@@ -19,12 +19,16 @@ class UserSeeder extends Seeder
                 'name' => 'Đặng Minh Đạt',
                 'email' => 'datdmgcc210147@fpt.edu.vn',
                 'lecturer_id' => 'GCC210147',
+                'student_id' => null,
+                'role' => '1',
                 'password' => Hash::make('password123'),
             ],
             [
                 'name' => 'Nguyễn Huỳnh Ngọc Thi',
                 'email' => 'thinhngdc210099@fpt.edu.vn',
-                'lecturer_id' => 'GDC210099',
+                'lecturer_id' => null,
+                'student_id' => 'GDC210099',
+                'role' => '2',
                 'password' => Hash::make('password456'),
             ],
             // Add more sample users as needed

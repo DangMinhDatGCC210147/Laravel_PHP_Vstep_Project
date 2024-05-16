@@ -12,11 +12,19 @@ use App\Http\Controllers\TestsController;
 use App\Http\Controllers\WritingController;
 use Illuminate\Support\Facades\Route;
 
+Route::fallback(function () {
+    return view('errors.404');
+});
 
 Route::get('/', [AuthController::class, 'showlogin'])->name('student.index');
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 
+
 Route::middleware(['auth'])->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+    //WAITING ROOM
+    Route::get('/lounge', [StudentController::class, 'index'])->name('student.index');
 
     Route::get('/index-lecturer', [IndexAdminController::class, 'index'])->name('admin.index');
     // INSTRUCTORS

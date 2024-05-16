@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class IndexAdminController extends Controller
 {
@@ -11,7 +12,9 @@ class IndexAdminController extends Controller
      */
     public function index()
     {
-        return view('admin.index');
+        $user_name = Session::get('user_name');
+        $user_email = Session::get('user_email');
+        return view('admin.index', compact('user_name', 'user_email'));
     }
 
     /**

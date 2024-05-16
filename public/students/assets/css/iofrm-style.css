@@ -280,6 +280,7 @@ html, body {
     align-items: center;
     padding: 60px;
     min-height: 100%;
+    z-index: 0;
 }
 
 .form-holder .form-content ::-webkit-input-placeholder {
@@ -1821,4 +1822,9 @@ input.sm-content {
         text-align: left !important;
         margin-top: 30px;
     }
+}
+
+
+.my-popup-class{ 
+    z-index: 9999;
 }

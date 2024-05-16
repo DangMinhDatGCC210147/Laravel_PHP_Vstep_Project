@@ -7,23 +7,27 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 // use Illuminate\Support\Str;
+use Illuminate\Auth\AuthenticationException;
 
 class AuthController extends Controller
 {
-    public function registerPost(Request $request){
+    public function registerPost(Request $request)
+    {
         $user = new User();
 
         $user->name = $request->name;
         $user->email = $request->email;
         $user->lecturer_id = $request->lecturer_id;
+        $user->role = "1";
         $user->password = Hash::make($request->password);
         $user->save();
         // return back()->with('success','Registered successfully');
         return redirect()->route('tableLecturer.index')->with('success', 'Registered successfully');
     }
 
-    public function showlogin(){
-        return view('students.index');
+    public function showlogin()
+    {
+        return view('auth.login');
     }
 
     public function login(Request $request)
@@ -35,11 +39,48 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect()->route('admin.index')->with('success', 'Login successfully!'); 
+        
+            // Lấy thông tin người dùng đã đăng nhập
+            $user = Auth::user();
+        
+            // Lưu thông tin người dùng vào session
+            $request->session()->put('lecturer_id', $user->lecturer_id);
+            $request->session()->put('student_id', $user->student_id);
+            $request->session()->put('user_name', $user->name);
+            $request->session()->put('user_email', $user->email);
+            // Kiểm tra thông tin session đã lưu
+            // dd($request->session()->all());
+            if (is_null($user->student_id)) {
+                return redirect()->route('admin.index')->with('success', 'Login successfully!');
+            } else {
+                return redirect()->route('student.index')->with('success', 'Login successfully!');
+            }
         }
 
         return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
+            'email' => 'Wrong email or password, please re-enter for information.',
         ])->onlyInput('email');
+    }
+
+    public function logout(Request $request)
+    {
+        Auth::logout();
+
+        // Xoá session đã tạo
+        $request->session()->invalidate();
+
+        // Tạo lại token CSRF mới
+        $request->session()->regenerateToken();
+
+        // Chuyển hướng người dùng về trang chủ hoặc trang đăng nhập
+        return redirect('/');
+    }
+
+    protected function unauthenticated($request, AuthenticationException $exception)
+    {
+        if ($request->expectsJson()) {
+            return response()->json(['message' => 'Unauthenticated.'], 401);
+        }
+        return response()->view('errors.404', [], 404);
     }
 }

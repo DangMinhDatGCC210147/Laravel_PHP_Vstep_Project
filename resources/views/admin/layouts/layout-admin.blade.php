@@ -367,10 +367,10 @@
                         <a class="nav-link dropdown-toggle nav-user me-0 waves-effect waves-light"
                             data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false"
                             aria-expanded="false">
-                            <img src="{{ asset('admin/assets/images/users/avatar-4.jpg') }}" alt="user-image"
-                                class="rounded-circle">
+                            {{-- <img src="{{ asset('admin/assets/images/users/avatar-4.jpg') }}" alt="user-image"
+                                class="rounded-circle"> --}}
                             <span class="ms-1 d-none d-md-inline-block">
-                                Jamie D. <i class="mdi mdi-chevron-down"></i>
+                                {{ $user_name }} <i class="mdi mdi-chevron-down"></i>
                             </span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end profile-dropdown ">
@@ -380,7 +380,7 @@
                             </div>
 
                             <!-- item-->
-                            <a href="javascript:void(0);" class="dropdown-item notify-item">
+                            {{-- <a href="javascript:void(0);" class="dropdown-item notify-item">
                                 <i class="fe-user"></i>
                                 <span>My Account</span>
                             </a>
@@ -395,16 +395,18 @@
                             <a href="pages-lock-screen.html" class="dropdown-item notify-item">
                                 <i class="fe-lock"></i>
                                 <span>Lock Screen</span>
-                            </a>
+                            </a> --}}
 
                             <div class="dropdown-divider"></div>
 
                             <!-- item-->
-                            <a href="pages-login.html" class="dropdown-item notify-item">
+                            <a href="javascript:void(0);" class="dropdown-item notify-item" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                 <i class="fe-log-out"></i>
                                 <span>Logout</span>
-                            </a>
-
+                            </a>                            
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                @csrf
+                            </form>                            
                         </div>
                     </li>
                 </ul>
@@ -533,4 +535,33 @@
     <!-- Datatables js -->
     <script src="{{ asset('admin/assets/js/pages/datatables.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if there is a success message in the session
+            @if (session('success'))
+                Swal.fire({
+                    title: 'Success!',
+                    text: '{{ session('success') }}',
+                    icon: 'success',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    showClass: {
+                        popup: `
+                    animate__animated
+                    animate__fadeInUp
+                    animate__faster
+                    `
+                    },
+                    hideClass: {
+                        popup: `
+                    animate__animated
+                    animate__fadeOutDown
+                    animate__faster
+                    `
+                    }
+                });
+            @endif
+        });
+    </script>
 </div>

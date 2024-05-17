@@ -48,6 +48,7 @@ class AuthController extends Controller
             $request->session()->put('student_id', $user->student_id);
             $request->session()->put('user_name', $user->name);
             $request->session()->put('user_email', $user->email);
+            $request->session()->put('account_id', $user->id);
             // Kiểm tra thông tin session đã lưu
             // dd($request->session()->all());
             if (is_null($user->student_id)) {
@@ -74,13 +75,5 @@ class AuthController extends Controller
 
         // Chuyển hướng người dùng về trang chủ hoặc trang đăng nhập
         return redirect('/');
-    }
-
-    protected function unauthenticated($request, AuthenticationException $exception)
-    {
-        if ($request->expectsJson()) {
-            return response()->json(['message' => 'Unauthenticated.'], 401);
-        }
-        return response()->view('errors.404', [], 404);
     }
 }

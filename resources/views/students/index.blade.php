@@ -27,19 +27,8 @@
                 <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
                     <div class="carousel-inner">
                         <div class="carousel-item active">
-                            <h5>Vui lòng kiểm tra micro, tai nghe/loa trước khi bấm nhận đề.</h5>
-                        </div>
-                        <div class="carousel-item">
-                            <h5>Vui lòng cấp quyền sử dụng micro cho trình duyệt trước khi thi.</h5>
-                        </div>
-                        <div class="carousel-item">
-                            <h5>Yêu cầu chụp hình trước khi thi.</h5>
-                        </div>
-                        <div class="carousel-item">
-                            <h5>Bài thi theo đúng thứ tự 04 kỹ năng: Nghe - Đọc - Viết - Nói.</h5>
-                        </div>
-                        <div class="carousel-item">
-                            <h5>Sự tự tin, lòng quyết tâm sẽ giúp bạn chiến thắng, University of Greenwich đang đợi bạn!</h5>
+                            <h5>Sự tự tin, lòng quyết tâm sẽ giúp bạn chiến thắng, University of Greenwich đang đợi bạn!
+                            </h5>
                         </div>
                         <div class="carousel-item">
                             <h5>Có B2 rồi mình đi lai rai</h5>
@@ -49,6 +38,15 @@
                         </div>
                         <div class="carousel-item">
                             <h5>Học hết mình, ôn nhiệt tình... cái đạt B2</h5>
+                        </div>
+                        <div class="carousel-item">
+                            <h5>Vui lòng kiểm tra micro, tai nghe/loa trước khi bấm nhận đề.</h5>
+                        </div>
+                        <div class="carousel-item">
+                            <h5>Vui lòng cấp quyền sử dụng micro cho trình duyệt trước khi thi.</h5>
+                        </div>
+                        <div class="carousel-item">
+                            <h5>Bài thi theo đúng thứ tự 04 kỹ năng: Nghe - Đọc - Viết - Nói.</h5>
                         </div>
                     </div>
                     <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying"
@@ -69,9 +67,12 @@
                     <div class="row justify-content-center">
                         <!-- Column for Image and Button -->
                         <div class="col-md-6 text-center ">
-                            <img src="image.png" alt="Video" class="img-video">
-                            <button type="button" class="btn btn-danger mt-3"><i class="bi bi-camera"></i> Chụp
-                                hình</button>
+                            <div class="camera">
+                                <canvas id="canvas" width="250" height="170" style="display:none;"></canvas>
+                                <video id="video" width="250" height="170" autoplay></video>
+                            </div>
+                            <!-- Capture button -->
+                            <button id="capture" class="btn btn-danger mt-3">Chụp hình</button>
                         </div>
                         <!-- Column for User Information -->
                         <div class="col-md-6">
@@ -156,6 +157,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
+    <script src="{{ asset('students/assets/js/camera.js') }}"></script>
 </body>
 
 </html>

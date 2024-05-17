@@ -370,7 +370,7 @@
                             {{-- <img src="{{ asset('admin/assets/images/users/avatar-4.jpg') }}" alt="user-image"
                                 class="rounded-circle"> --}}
                             <span class="ms-1 d-none d-md-inline-block">
-                                {{ $user_name }} <i class="mdi mdi-chevron-down"></i>
+                                {{ session('user_name') }} <i class="mdi mdi-chevron-down"></i>
                             </span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end profile-dropdown ">
@@ -427,13 +427,13 @@
                         <div>
                             <script>
                                 document.write(new Date().getFullYear())
-                            </script> © Dashtrap
+                            </script> © Copyright by Greenwich Vietnam Cantho Campus
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="d-none d-md-flex gap-4 align-item-center justify-content-md-end">
-                            <p class="mb-0">Design & Develop by <a href="https://myrathemes.com/"
-                                    target="_blank">MyraStudio</a> </p>
+                            <p class="mb-0">Develop by <a href="#"
+                                    target="_blank">DATDMGCC210147</a> </p>
                         </div>
                     </div>
                 </div>

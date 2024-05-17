@@ -53,7 +53,7 @@
             <div class="d-flex justify-content-center">
                 <script>
                     document.write(new Date().getFullYear())
-                </script> © Copy rights reserved
+                </script> © Copyright by Greenwich Vietnam Cantho Campus
             </div>
         </div>
     </footer>

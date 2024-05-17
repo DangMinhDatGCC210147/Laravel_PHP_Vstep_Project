@@ -92,3 +92,9 @@ audio {
 .bi-1-square-fill, .bi-2-square-fill, .bi-3-square-fill{
     font-size: 30px;
 }
+
+.camera{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

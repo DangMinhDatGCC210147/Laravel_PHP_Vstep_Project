@@ -12,11 +12,13 @@ class StudentController extends Controller
         $user_email = Session::get('user_email');
         $parts = explode('@', $user_email);
         $user_id_student = $parts[0]; 
+        $account_id = Session::get('account_id');
         // Truyền dữ liệu đến view
         return view('students.index', [
             'user_name' => $user_name,
             'user_email' => $user_email,
-            'user_id_student' => $user_id_student
+            'user_id_student' => $user_id_student,
+            'account_id' => $account_id
         ]);
     }
 }

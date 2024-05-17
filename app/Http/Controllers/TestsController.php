@@ -43,8 +43,9 @@ class TestsController extends Controller
             'test_name' => 'required|string',
             'duration' => 'required|date_format:H:i',
             'instructor_id' => 'required|integer',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date',
+            // 'start_date' => 'required|date',
+            // 'end_date' => 'required|date',
+            'test_type' => 'required|string',
         ]);
         // Check if the test_code already exists
         if (Test::where('test_code', $request->test_code)->exists()) {
@@ -59,6 +60,7 @@ class TestsController extends Controller
         $test->start_date = $request->start_date;
         $test->end_date = $request->end_date;
         $test->instructor_id = $request->instructor_id;
+        $test->test_type = $request->test_type;
         $test->save();
 
         // Define the skills data
@@ -118,9 +120,10 @@ class TestsController extends Controller
         $validatedData = $request->validate([
             'test_code' => 'required|string',
             'duration' => 'required|string',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date',
+            // 'start_date' => 'required|date',
+            // 'end_date' => 'required|date',
             'instructor_id' => 'required|exists:users,id',
+            'test_type' => 'required|string',
         ]);
 
         // Update the test with validated data

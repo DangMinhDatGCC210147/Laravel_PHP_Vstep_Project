@@ -12,9 +12,7 @@ class IndexAdminController extends Controller
      */
     public function index()
     {
-        $user_name = Session::get('user_name');
-        $user_email = Session::get('user_email');
-        return view('admin.index', compact('user_name', 'user_email'));
+        return view('admin.index');
     }
 
     /**

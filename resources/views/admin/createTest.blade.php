@@ -67,13 +67,36 @@
                                             <input class="form-control" type="date" name="end_date" id="example-date" value="{{ $test_slug->end_date ?? '' }}">
                                         </div>
                                     </div>
+                                    <div class="row mb-2">
+                                        <label class="col-md-2 col-form-label" for="example-choose">Test Type</label>
+                                        <div class="col-md-10">
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="test_type" id="progressTest" value="progressTest" {{ isset($test_slug) && $test_slug->test_type == 'progressTest' ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="progressTest">
+                                                    Progress Test
+                                                </label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="test_type" id="exam" value="exam" {{ isset($test_slug) && $test_slug->test_type == 'exam' ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="exam">
+                                                    Exam
+                                                </label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="test_type" id="trialTest" value="trialTest" {{ isset($test_slug) && $test_slug->test_type == 'trialTest' ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="trialTest">
+                                                    Trial Test
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="mb-2 row">
                                         <label class="col-md-2 col-form-label">Lecturer</label>
                                         <div class="col-md-10">
                                             <select class="form-control" name="instructor_id" required>
                                                 <option selected disabled>Click to choose</option>
                                                 @foreach($lecturers as $lecturer)
-                                                    <option value="{{ $lecturer->id}}" {{ (isset($test_slug) && $lecturer->id == $test_slug->id) ? 'selected' : '' }}>{{ $lecturer->name}}</option>
+                                                    <option value="{{ $lecturer->id}}" {{ (isset($test_slug) && $lecturer->id == $test_slug->instructor_id) ? 'selected' : '' }}>{{ $lecturer->name}}</option>
                                                 @endforeach
                                             </select>                                            
                                         </div>
@@ -84,7 +107,7 @@
                                             <button type="submit" class="btn btn-primary w-xl">{{ isset($test_slug) ? 'Update' : 'Create' }}</button>
                                         </div>
                                     </div>
-                                </form>
+                                </form>                                
                             </div>
                         </div>
                     </div>

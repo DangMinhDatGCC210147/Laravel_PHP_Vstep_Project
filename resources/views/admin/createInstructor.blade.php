@@ -58,7 +58,15 @@
                                         <div class="col-md-10">
                                             <input type="text" id="example-email" class="form-control"
                                                 placeholder="Lecturer ID" name="lecturer_id"
-                                                value="{{ isset($user) ? $user->lecturer_id : '' }}" required>
+                                                value="{{ isset($user) ? $user->lecturer_id : '' }}">
+                                        </div>
+                                    </div>
+                                    <div class="mb-2 row">
+                                        <label class="col-md-2 col-form-label" for="example-email">Student ID</label>
+                                        <div class="col-md-10">
+                                            <input type="text" id="example-email" class="form-control"
+                                                placeholder="Student ID" name="student_id"
+                                                value="{{ isset($user) ? $user->student_id : '' }}">
                                         </div>
                                     </div>
                                     @if (!isset($user))

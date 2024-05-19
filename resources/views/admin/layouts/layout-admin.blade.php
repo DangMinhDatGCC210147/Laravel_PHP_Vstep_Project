@@ -302,6 +302,11 @@
                                 </a>
                             </li>
                             <li class="menu-item">
+                                <a href="{{ route('tableStudent.index') }}" class="menu-link">
+                                    <span class="menu-text">Student List</span>
+                                </a>
+                            </li>
+                            <li class="menu-item">
                                 <a href="{{ route('tableTest.index') }}" class="menu-link">
                                     <span class="menu-text">Test List</span>
                                 </a>

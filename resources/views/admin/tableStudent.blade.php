@@ -11,7 +11,7 @@
                 <div class="d-none d-lg-block">
                     <ol class="breadcrumb m-0 float-end">
                         <li class="breadcrumb-item"><a href="{{ route('admin.index') }}">Dashboard</a></li>
-                        <li class="breadcrumb-item active">List of Lecturers</li>
+                        <li class="breadcrumb-item active">List of Students</li>
                     </ol>
                 </div>
             </div>
@@ -28,7 +28,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="header-title">List of Lecturers</h4>
+                    <h4 class="header-title">List of Students</h4>
 
                     <table id="basic-datatable" class="table dt-responsive nowrap w-100">
                         <thead>
@@ -36,7 +36,7 @@
                                 <th>No</th>
                                 <th>Full Name</th>
                                 <th>Email</th>
-                                <th>Lecturer ID</th>
+                                <th>Student ID</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -46,7 +46,7 @@
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $lecturer->name }}</td>
                                     <td>{{ $lecturer->email }}</td>
-                                    <td>{{ $lecturer->lecturer_id }}</td>
+                                    <td>{{ $lecturer->student_id }}</td>
                                     <td>
                                         <a href="{{ route('createInstructor.edit', $lecturer->slug) }}"><i
                                                 class="mdi mdi-lead-pencil mdi-24px"></i></a>

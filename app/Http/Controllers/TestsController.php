@@ -27,7 +27,7 @@ class TestsController extends Controller
      */
     public function create()
     {
-        $lecturers = User::all(); // Assuming you have a Lecturer model
+        $lecturers = User::whereNotNull('lecturer_id')->get();     
         return view('admin.createTest', compact('lecturers'));
     }
 

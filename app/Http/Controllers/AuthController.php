@@ -18,7 +18,12 @@ class AuthController extends Controller
         $user->name = $request->name;
         $user->email = $request->email;
         $user->lecturer_id = $request->lecturer_id;
-        $user->role = "1";
+        $user->student_id = $request->student_id;
+        if($user->lecturer_id != null){
+            $user->role = "1";
+        }else{
+            $user->role = "2";
+        }
         $user->password = Hash::make($request->password);
         $user->save();
         // return back()->with('success','Registered successfully');

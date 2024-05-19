@@ -13,10 +13,17 @@ class InstructorsController extends Controller
      */
     public function index()
     {
-        $lecturers = User::all();
+        // $lecturers = User::all();
+        $lecturers = User::whereNotNull('lecturer_id')->get();
         return view('admin.tableLecturer', compact('lecturers'));
     }
 
+    public function indexStudent()
+    {
+        // $lecturers = User::all();
+        $lecturers = User::whereNotNull('student_id')->get();
+        return view('admin.tableStudent', compact('lecturers'));
+    }
     /**
      * Show the form for creating a new resource.
      */
@@ -62,11 +69,22 @@ class InstructorsController extends Controller
         $user->name = $request->name;
         $user->email = $request->email;
         $user->lecturer_id = $request->lecturer_id;
+        $user->student_id = $request->student_id;
+
+        if($user->lecturer_id != null){
+            $user->role = '1';
+        }else{
+            $user->role = '2';
+        }
         // Save the updated user
         $user->save();
 
         // Redirect back with a success message
-        return redirect()->route('tableLecturer.index')->with('success', 'User updated successfully');
+        if($user->lecturer_id != null){
+            return redirect()->route('tableLecturer.index')->with('success', 'Lecturer updated successfully');
+        }else{
+            return redirect()->route('tableStudent.index')->with('success', 'Student updated successfully');
+        }
     }
 
     /**

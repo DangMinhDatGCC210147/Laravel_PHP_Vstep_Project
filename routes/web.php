@@ -22,6 +22,7 @@ Route::post('/login', [AuthController::class, 'login'])->name('login');
 
 Route::middleware(['auth'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::post('/save-image', [StudentController::class, 'store']);
 
     //WAITING ROOM
     Route::get('/lounge', [StudentController::class, 'index'])->name('student.index');
@@ -29,6 +30,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/index-lecturer', [IndexAdminController::class, 'index'])->name('admin.index');
     // INSTRUCTORS
     Route::get('/list-lecturer', [InstructorsController::class, 'index'])->name('tableLecturer.index');
+    Route::get('/list-student', [InstructorsController::class, 'indexStudent'])->name('tableStudent.index');
     Route::get('/create-lecturer', [InstructorsController::class, 'create'])->name('createInstructor.create');
     Route::post('/create-lecturer', [AuthController::class, 'registerPost'])->name('createInstructor.store');
     Route::get('/lecturers/{slug}/edit', [InstructorsController::class, 'edit'])->name('createInstructor.edit');

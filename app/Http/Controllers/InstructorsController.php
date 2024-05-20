@@ -14,15 +14,19 @@ class InstructorsController extends Controller
     public function index()
     {
         // $lecturers = User::all();
-        $lecturers = User::whereNotNull('lecturer_id')->get();
+        $lecturers = User::whereNotNull('lecturer_id')
+                            ->orderBy('id', 'asc')
+                            ->get();
         return view('admin.tableLecturer', compact('lecturers'));
     }
 
     public function indexStudent()
     {
         // $lecturers = User::all();
-        $lecturers = User::whereNotNull('student_id')->get();
-        return view('admin.tableStudent', compact('lecturers'));
+        $students = User::whereNotNull('student_id')
+                            ->orderBy('id', 'asc')
+                            ->get();
+        return view('admin.tableStudent', compact('students'));
     }
     /**
      * Show the form for creating a new resource.

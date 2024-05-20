@@ -4,13 +4,13 @@
     <div class="py-3 py-lg-4">
         <div class="row">
             <div class="col-lg-6">
-                <h4 class="page-title mb-0">{{ isset($user) ? 'Edit' : 'Create' }} Lecturer Account</h4>
+                <h4 class="page-title mb-0">{{ isset($user) ? 'Edit' : 'Create' }} Lecturer and Student Account</h4>
             </div>
             <div class="col-lg-6">
                 <div class="d-none d-lg-block">
                     <ol class="breadcrumb m-0 float-end">
                         <li class="breadcrumb-item"><a href="javascript: void(0);">Forms</a></li>
-                        <li class="breadcrumb-item active">{{ isset($user) ? 'Edit' : 'Create' }} New Lecturer</li>
+                        <li class="breadcrumb-item active">{{ isset($user) ? 'Edit' : 'Create' }} New Account</li>
                     </ol>
                 </div>
             </div>

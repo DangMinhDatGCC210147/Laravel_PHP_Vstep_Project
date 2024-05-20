@@ -19,11 +19,10 @@ Route::fallback(function () {
 Route::get('/', [AuthController::class, 'showlogin'])->name('student.index');
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 
-
 Route::middleware(['auth'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-    Route::post('/save-image', [StudentController::class, 'store']);
-
+    Route::post('/save-image', [StudentController::class, 'store'])->name('saveImage');
+    
     //WAITING ROOM
     Route::get('/lounge', [StudentController::class, 'index'])->name('student.index');
 

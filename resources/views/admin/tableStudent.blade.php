@@ -41,29 +41,28 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($lecturers as $lecturer)
+                            @foreach ($students as $student)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $lecturer->name }}</td>
-                                    <td>{{ $lecturer->email }}</td>
-                                    <td>{{ $lecturer->student_id }}</td>
+                                    <td>{{ $student->name }}</td>
+                                    <td>{{ $student->email }}</td>
+                                    <td>{{ $student->student_id }}</td>
                                     <td>
-                                        <a href="{{ route('createInstructor.edit', $lecturer->slug) }}"><i
+                                        <a href="{{ route('createInstructor.edit', $student->slug) }}"><i
                                                 class="mdi mdi-lead-pencil mdi-24px"></i></a>
-                                        <a href="{{ route('createInstructor.destroy', $lecturer->slug) }}"
+                                        <a href="{{ route('createInstructor.destroy', $student->slug) }}"
                                             onclick="event.preventDefault();
                                                     if(confirm('Are you sure you want to delete this test?')) {
-                                                        document.getElementById('delete-form-{{ $lecturer->slug }}').submit();
+                                                        document.getElementById('delete-form-{{ $student->slug }}').submit();
                                                     }">
                                             <i class="mdi mdi-delete-empty mdi-24px" style="color: red"></i>
                                         </a>
-                                        <form id="delete-form-{{ $lecturer->slug }}"
-                                            action="{{ route('createInstructor.destroy', $lecturer->slug) }}" method="POST"
+                                        <form id="delete-form-{{ $student->slug }}"
+                                            action="{{ route('createInstructor.destroy', $student->slug) }}" method="POST"
                                             style="display: none;">
                                             @csrf
                                             @method('DELETE')
                                         </form>
-
                                     </td>
                                 </tr>
                             @endforeach

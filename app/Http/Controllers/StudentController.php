@@ -6,6 +6,7 @@ use App\Models\Student;
 use App\Models\Test;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class StudentController extends Controller
 {
@@ -27,41 +28,30 @@ class StudentController extends Controller
 
     public function store(Request $request)
     {
-        dd($request->all());
-        $data = $request->validate([
-            'userName' => 'required',
-            'userEmail' => 'required',
-            'userId' => 'required',
+        $request->validate([
+            'image' => 'required|image|max:5048',
             'accountId' => 'required',
-            'imageData' => 'required'
         ]);
 
-        // Decode the image data
-        $imageData = $data['imageData'];
-        $imageData = str_replace('data:image/png;base64,', '', $imageData);
-        $imageData = str_replace(' ', '+', $imageData);
-        $imageFile = base64_decode($imageData);
+        $latestStudentEntry = Student::where('user_id', $request->accountId)
+            ->orderByDesc('created_at')
+            ->first();
 
-        // Generate a unique file name
-        $fileName = 'capture-' . time() . '.png';
-        $path = public_path('images/' . $fileName);
-
-        // Save the image file
-        file_put_contents($path, $imageFile);
-        $randomTest = Test::where('test_type', 'trialTest')->inRandomOrder()->first();
-
-        // Check if a test was found
-        if (!$randomTest) {
-            return response()->json(['message' => 'No trial test found'], 404);
+        if (!$latestStudentEntry) {
+            return response()->json(['error' => 'No student found with the given user ID'], 404);
         }
-        // Save the record in your database
-        $record = new Student([
-            'user_id' => $data['userId'],
-            'test_id' => $randomTest->id,
-            'image_file' => $fileName,
-        ]);
-        $record->save();
+        if ($latestStudentEntry->image_file) {
+            Storage::disk('public')->delete(str_replace('storage/', '', $latestStudentEntry->image_file));
+        }
 
-        return response()->json(['message' => 'Image saved successfully']);
+        $path = $request->file('image')->store('students', 'public');
+        $url = Storage::url($path);
+        // Lưu URL hình ảnh và thông tin người dùng vào database
+        $student = Student::updateOrCreate(
+            ['user_id' => $request->accountId], // Trường duy nhất để xác định Student
+            ['image_file' => $url, 'test_id' => $latestStudentEntry->id] // Cập nhật hoặc thêm mới các trường này
+        );
+
+        return response()->json(['message' => 'Hình ảnh đã được lưu thành công!']);
     }
 }

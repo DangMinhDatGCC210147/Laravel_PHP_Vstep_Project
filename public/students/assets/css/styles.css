@@ -98,3 +98,7 @@ audio {
     justify-content: center;
     align-items: center;
 }
+
+.text-center-banner{
+    padding-top: 20%;
+}

@@ -17,14 +17,14 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
         rel="stylesheet">
-        
+
 </head>
 
 <body class="vh-100 d-flex align-items-center justify-content-center">
     <div class="container">
         <div class="row justify-content-center">
             <!-- Information Structure 1 -->
-            <div class="col-12 information-structure-1 text-center mb-4">
+            <div class="col-12 information-structure-1 text-center-banner text-center mb-4">
                 <!-- Vui lòng kiểm tra micro, tai nghe/loa trước khi bấm nhận đề -->
                 <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
                     <div class="carousel-inner">
@@ -74,7 +74,12 @@
                                 <video id="video" width="250" height="170" autoplay></video>
                             </div>
                             <!-- Capture button -->
-                            <button id="capture" class="btn btn-danger mt-3">Chụp hình</button>
+                            <form id="imageUploadForm" action="/save-image" method="POST" enctype="multipart/form-data">
+                                @csrf
+                                <input type="hidden" name="accountId" value="{{ $account_id }}">
+                                <input type="hidden" name="isUpdate" value="0" id="isUpdate">
+                                <button type="button" id="capture" class="btn btn-danger mt-3">Chụp hình</button>
+                            </form>
                         </div>
                         <!-- Column for User Information -->
                         <div class="col-md-6">
@@ -83,7 +88,7 @@
                             <div class="infor">UserID: <strong>{{ $user_id_student }}</strong></div>
                             <div class="infor">Định dạng thi: <strong>Bậc 3 - 5</strong></div>
                             <div class="infor">Ngày thi: <strong>{{ date('d/m/Y') }}</strong></div>
-                        </div>
+                        </div>                     
                     </div>
                 </div>
             </div>
@@ -93,9 +98,12 @@
             <div class="col-md-4">
                 <div class="test-structure text-white p-3 ">
                     <div class="skills">
-                        <div class="card d-flex align-items-center justify-content-center"> <!-- Sử dụng d-flex để bật Flexbox -->
+                        <div class="card d-flex align-items-center justify-content-center">
+                            <!-- Sử dụng d-flex để bật Flexbox -->
                             <div class="icon"><i class="bi bi-1-square-fill"></i></div>
-                            <div class="text"><h2>CẤU TRÚC BÀI THI</h2></div>
+                            <div class="text">
+                                <h2>CẤU TRÚC BÀI THI</h2>
+                            </div>
                         </div>
                     </div>
                     <p class="skills mt-3">Kỹ năng số 1: NGHE – 3 phần (47 phút)</p>
@@ -107,9 +115,12 @@
             <!-- Audio Check Column -->
             <div class="col-md-4">
                 <div class="audio-check text-white p-3 justify-text">
-                    <div class="card d-flex align-items-center justify-content-center"> <!-- Sử dụng d-flex để bật Flexbox -->
+                    <div class="card d-flex align-items-center justify-content-center">
+                        <!-- Sử dụng d-flex để bật Flexbox -->
                         <div class="icon"><i class="bi bi-2-square-fill"></i></div>
-                        <div class="text"><h2>KIỂM TRA ÂM THANH</h2></div>
+                        <div class="text">
+                            <h2>KIỂM TRA ÂM THANH</h2>
+                        </div>
                     </div>
                     <p><strong>Bước 1:</strong> Mở loa và đeo tai nghe để nghe một đoạn audio bên dưới</p>
                     <audio controls class="mb-3">
@@ -134,9 +145,12 @@
             <!-- Notes Column -->
             <div class="col-md-4">
                 <div class="notes text-white p-3 justify-text">
-                    <div class="card d-flex align-items-center justify-content-center"> <!-- Sử dụng d-flex để bật Flexbox -->
+                    <div class="card d-flex align-items-center justify-content-center">
+                        <!-- Sử dụng d-flex để bật Flexbox -->
                         <div class="icon"><i class="bi bi-3-square-fill"></i></div>
-                        <div class="text"><h2>LƯU Ý</h2></div>
+                        <div class="text">
+                            <h2>LƯU Ý</h2>
+                        </div>
                     </div>
                     <p>Khi hết thời gian của từng kỹ năng, hệ thống sẽ tự động chuyển sang kỹ năng tiếp theo. Thí sinh
                         không thể thao tác được với kỹ năng đã làm trước đó.</p>
@@ -144,7 +158,8 @@
                     <p>Để chuyển part hay kỹ năng thí sinh click vào nút <strong>"TIẾP TỤC"</strong></p>
                     <div class="underline"></div>
                     <div class="btn-group d-flex justify-content-lg-between">
-                        <button type="button" class="btn btn-success mt-3" style="background-color: #27cd18;">NHẬN ĐỀ</button>    
+                        <button type="button" class="btn btn-success mt-3" style="background-color: #27cd18;">NHẬN
+                            ĐỀ</button>
                         <form action="{{ route('logout') }}" method="POST">
                             @csrf
                             <button type="submit" class="btn btn-secondary mt-3" style=>ĐĂNG XUẤT</button>
@@ -157,16 +172,8 @@
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-        crossorigin="anonymous"></script>
-        <script>
-            // Tạo biến global để chứa dữ liệu từ session
-            window.userData = {
-                userName: @json(session('user_name')),
-                userEmail: @json(session('user_email')),
-                accountId: @json(session('account_id'))
-            };
-        </script>
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
+    </script>
     <script src="{{ asset('students/assets/js/camera.js') }}"></script>
 </body>
 

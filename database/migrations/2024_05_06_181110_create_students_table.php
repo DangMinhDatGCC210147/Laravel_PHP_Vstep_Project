@@ -13,13 +13,17 @@ return new class extends Migration
     {
         Schema::create('students', function (Blueprint $table) {
             $table->id();
-            $table->string('user_id');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('users')
+                ->onDelete('cascade');
             $table->unsignedBigInteger('test_id')->nullable();
-            $table->string('image_file')->nullable();
             $table->foreign('test_id')
                 ->references('id')
                 ->on('tests')
                 ->onDelete('cascade');
+            $table->longText('image_file')->nullable();
             $table->timestamps();
         });
     }

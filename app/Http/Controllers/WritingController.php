@@ -17,6 +17,7 @@ class WritingController extends Controller
             $readingsAudio1 = new ReadingsAudio();
             $readingsAudio1->test_skill_id = $skill_id;
             $readingsAudio1->reading_audio_file = $request->input('passage1');
+            $readingsAudio1->part_name = 'Part 1';
             $readingsAudio1->save();
 
             $question1 = new Question();
@@ -32,6 +33,7 @@ class WritingController extends Controller
             $readingsAudio2 = new ReadingsAudio();
             $readingsAudio2->test_skill_id = $skill_id;
             $readingsAudio2->reading_audio_file = $request->input('passage2');
+            $readingsAudio2->part_name = 'Part 2';
             $readingsAudio2->save();
 
             $question2 = new Question();

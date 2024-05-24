@@ -18,7 +18,8 @@ class SpeakingController extends Controller
             for ($i = 1; $i <= 2; $i++) {
                 $readingsAudio = new ReadingsAudio([
                     'test_skill_id' => $skill_id,
-                    'reading_audio_file' => $request->input("part1_question_$i")
+                    'reading_audio_file' => $request->input("part1_question_$i"),
+                    'part_name' => 'Part 1',
                 ]);
                 $readingsAudio->save();
 
@@ -47,7 +48,8 @@ class SpeakingController extends Controller
             // Process Part 2
             $readingsAudio2 = new ReadingsAudio([
                 'test_skill_id' => $skill_id,
-                'reading_audio_file' => $request->input("part2_text")
+                'reading_audio_file' => $request->input("part2_text"),
+                'part_name' => 'Part 2',
             ]);
             $readingsAudio2->save();
 
@@ -68,6 +70,7 @@ class SpeakingController extends Controller
                 $listeningAudio3 = new ReadingsAudio();
                 $listeningAudio3->reading_audio_file = $imagePath;
                 $listeningAudio3->test_skill_id = $skill_id;
+                $listeningAudio3->part_name = 'Part 3';
                 $listeningAudio3->save();
 
                 $questionTextPart3 = $request->input('part3_question');

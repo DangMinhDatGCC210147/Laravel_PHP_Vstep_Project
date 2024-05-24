@@ -19,6 +19,7 @@ return new class extends Migration
                 ->on('test_skills')
                 ->onDelete('cascade');
             $table->longText('reading_audio_file');
+            $table->string('part_name')->nullable();
             $table->timestamps();
         });
     }

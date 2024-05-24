@@ -10,10 +10,6 @@ class Question extends Model
     use HasFactory;
     protected $fillable = ['test_skill_id', 'reading_audio_id', 'question_number', 'part_name', 'question_text', 'question_type', 'correct_answer'];
 
-    // public function skillPart()
-    // {
-    //     return $this->belongsTo(SkillPart::class);
-    // }
     public function testSkill()
     {
         return $this->belongsTo(TestSkill::class);

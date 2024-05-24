@@ -35,7 +35,10 @@ class InstructorsController extends Controller
     {
         return view('admin.createInstructor');
     }
-
+    public function createStudent()
+    {
+        return view('admin.createStudent');
+    }
     /**
      * Store a newly created resource in storage.
      */
@@ -60,6 +63,13 @@ class InstructorsController extends Controller
         $user = User::findOrFail($slug->id);
         // Pass the user data to the view for editing
         return view('admin.createInstructor', compact('user'));
+    }
+
+    public function editStudent(User $slug)
+    {
+        $user = User::findOrFail($slug->id);
+        // Pass the user data to the view for editing
+        return view('admin.createStudent', compact('user'));
     }
 
     /**

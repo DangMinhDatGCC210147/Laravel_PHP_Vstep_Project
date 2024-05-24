@@ -10,7 +10,7 @@ class ReadingsAudio extends Model
     use HasFactory;
 
     protected $table = 'readings_audios';
-    protected $fillable = ['test_skill_id', 'reading_audio_file'];
+    protected $fillable = ['test_skill_id', 'reading_audio_file', 'part_name'];
 
     public function testSkill()
     {

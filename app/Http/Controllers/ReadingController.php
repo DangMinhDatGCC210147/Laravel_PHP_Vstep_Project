@@ -32,11 +32,11 @@ class ReadingController extends Controller
                 $readingAudio = new ReadingsAudio();
                 $readingAudio->reading_audio_file = $passage;
                 $readingAudio->test_skill_id = $skill_id;
+                $readingAudio->part_name = 'Part ' . ($part - 1 + 1);
                 $readingAudio->save();
                 // Each part has 10 questions
                 for ($q = 1; $q <= 10; $q++) {
                     $questionData = $request->questions[($part - 1) * 10 + $q];
-
                     $question = new Question;
                     $question->test_skill_id = $skill_id; // Assuming skill_part_id is provided correctly
                     $question->reading_audio_id = $readingAudio->id;

@@ -68,7 +68,7 @@ class StudentController extends Controller
     {
         $userId = auth()->user()->id; // Lấy user_id của người dùng hiện tại
         $student = Student::where('user_id', $userId)->first(); // Lấy thông tin sinh viên từ DB
-    
+
         if ($student && $student->test_id) {
             $test = Test::find($student->test_id);
             if ($test && $test->slug) {
@@ -81,14 +81,26 @@ class StudentController extends Controller
             // Nếu không có test_id hoặc không tìm thấy bản ghi sinh viên, chuyển hướng với thông báo lỗi
             return redirect()->back()->with('error', 'Không tìm thấy bài test hoặc bạn chưa thực hiện chụp hình trước khi kiểm tra!.');
         }
-    }    
+    }
 
     public function showTest($slug)
     {
         $test = Test::with(['testSkills.questions.options', 'testSkills.readingsAudios'])
                     ->where('slug', $slug)
                     ->firstOrFail();
-        $skills = $test->testSkills; // Lấy tất cả skills, bao gồm các parts      
-        return view('students.show', ['test' => $test, 'skills' => $skills]);
+        $skills = $test->testSkills; // Lấy tất cả skills, bao gồm các parts    
+        $sortedSkills = $skills->sortBy(function($skill) {
+            $order = ['Listening', 'Reading', 'Writing', 'Speaking'];
+            return array_search($skill->skill_name, $order);
+        }); 
+        return view('students.show', ['test' => $test, 'skills' => $sortedSkills ]);
     }  
+    // public function showTest($slug)
+    // {
+    //     $test = Test::with(['testSkills.questions.readingsAudio'])
+    //                 ->where('slug', $slug)
+    //                 ->firstOrFail();
+    //     return view('students.show', compact('test'));
+    // }
+    
 }

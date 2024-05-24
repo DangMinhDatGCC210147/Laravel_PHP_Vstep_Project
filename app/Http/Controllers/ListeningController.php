@@ -34,6 +34,7 @@ class ListeningController extends Controller
                 $listeningAudio = new ReadingsAudio();
                 $listeningAudio->reading_audio_file = $audioPaths[$part];
                 $listeningAudio->test_skill_id = $skill_id;
+                $listeningAudio->part_name = 'Part ' . $part;
                 $listeningAudio->save();
                 for ($q = $range['start']; $q <= $range['end']; $q++) {
                     $questionData = $request->questions[$q];

@@ -65,10 +65,10 @@ class TestsController extends Controller
 
         // Define the skills data
         $skills = [
-            ['skill_name' => 'Speaking', 'time_limit' => '00:12:00', 'question_count' => 0, 'part_count' => 3],
-            ['skill_name' => 'Writing', 'time_limit' => '01:00:00', 'question_count' => 0, 'part_count' => 2],
-            ['skill_name' => 'Reading', 'time_limit' => '01:00:00', 'question_count' => 0, 'part_count' => 4],
-            ['skill_name' => 'Listening', 'time_limit' => '00:47:00', 'question_count' => 0, 'part_count' => 3],
+            ['skill_name' => 'Speaking', 'time_limit' => '00:12:00', 'part_count' => 3],
+            ['skill_name' => 'Writing', 'time_limit' => '01:00:00', 'part_count' => 2],
+            ['skill_name' => 'Reading', 'time_limit' => '01:00:00', 'part_count' => 4],
+            ['skill_name' => 'Listening', 'time_limit' => '00:47:00', 'part_count' => 3],
         ];
 
         // Create each skill linked to the test
@@ -77,7 +77,6 @@ class TestsController extends Controller
             $testSkill->test_id = $test->id;
             $testSkill->skill_name = $skill['skill_name'];
             $testSkill->time_limit = $skill['time_limit'];
-            $testSkill->question_count = $skill['question_count'];
             $testSkill->save();
 
         }

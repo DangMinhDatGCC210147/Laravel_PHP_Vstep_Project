@@ -18,7 +18,7 @@
     </div>
     <div class="py-3 py-lg-4">
         <div class="row">
-            <div class="col-lg-6"><a class="btn btn-secondary" href="{{ route('tableLecturer.index') }}">
+            <div class="col-lg-6"><a class="btn btn-secondary" href="{{ route('tableStudent.index') }}">
                     <i class="mdi mdi-arrow-left-bold"></i> Turn back to previous page</a></div>
         </div>
     </div>
@@ -31,7 +31,7 @@
                         <div class="col-12">
                             <div class="p-2">
                                 <form class="form-horizontal"
-                                    action="{{ isset($user) ? route('createInstructor.update', $user->slug) : route('createInstructor.store') }}"
+                                    action="{{ isset($user) ? route('createStudent.update', $user->slug) : route('createInstructor.store') }}"
                                     method="POST">
                                     @csrf
                                     @if (isset($user))
@@ -54,21 +54,13 @@
                                         </div>
                                     </div>
                                     <div class="mb-2 row">
-                                        <label class="col-md-2 col-form-label" for="example-email">Lecturer ID</label>
-                                        <div class="col-md-10">
-                                            <input type="text" id="example-email" class="form-control"
-                                                placeholder="Lecturer ID" name="lecturer_id"
-                                                value="{{ isset($user) ? $user->lecturer_id : '' }}">
-                                        </div>
-                                    </div>
-                                    {{-- <div class="mb-2 row">
                                         <label class="col-md-2 col-form-label" for="example-email">Student ID</label>
                                         <div class="col-md-10">
                                             <input type="text" id="example-email" class="form-control"
                                                 placeholder="Student ID" name="student_id"
                                                 value="{{ isset($user) ? $user->student_id : '' }}">
                                         </div>
-                                    </div> --}}
+                                    </div>
                                     @if (!isset($user))
                                         <div class="mb-2 row">
                                             <label class="col-md-2 col-form-label" for="example-password">Password</label>

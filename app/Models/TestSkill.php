@@ -11,7 +11,7 @@ class TestSkill extends Model
     use HasFactory;
     use Sluggable;
 
-    protected $fillable = ['test_id', 'skill_name', 'time_limit', 'question_count'];
+    protected $fillable = ['test_id', 'skill_name', 'time_limit'];
 
     public function sluggable(): array
     {
@@ -40,5 +40,5 @@ class TestSkill extends Model
     public function readingsAudios()
     {
         return $this->hasMany(ReadingsAudio::class);
-    }
+    }    
 }

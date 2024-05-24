@@ -18,6 +18,7 @@ class Question extends Model
     {
         return $this->belongsTo(TestSkill::class);
     }
+    
     public function readingsAudio()
     {
         return $this->belongsTo(ReadingsAudio::class);

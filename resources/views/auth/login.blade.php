@@ -4,7 +4,7 @@
     <div class="form-body without-side">
         <div class="website-logo">
             <div class="logo">
-                <img class="logo-size" src="{{ asset('students/assets/images/main-logo.png') }}" alt="Logo Greenwich">
+                <img class="logo-size" src="{{ asset('students/assets/images/logo-white.png') }}" alt="Logo Greenwich">
             </div>
         </div>
         <div class="row">
@@ -27,7 +27,7 @@
                             </div>
                         </div>
                         {{-- <h3 class="form-title-center">Sign up and get access to the full guide right now</h3> --}}
-                        <form method="POST" action="{{ route('login') }}">
+                        <form method="POST" action="{{ route('loginAccount') }}">
                             @csrf
                             @if ($errors->any())
                                 <div class="alert alert-danger">

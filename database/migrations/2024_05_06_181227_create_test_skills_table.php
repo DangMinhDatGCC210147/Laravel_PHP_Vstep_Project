@@ -20,7 +20,6 @@ return new class extends Migration
                 ->onDelete('cascade');
             $table->string('skill_name');
             $table->time('time_limit');
-            $table->integer('question_count');
             $table->timestamps();
         });
     }

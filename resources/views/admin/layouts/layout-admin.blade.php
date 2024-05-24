@@ -6,14 +6,15 @@
     <title>@yield("title", "Vstep Website")</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
-    <meta content="Myra Studio" name="author" />
+    <meta content="DangMinhDat" name="author" />
     {{-- <meta http-equiv="refresh" content="2"> --}}
     <!-- App favicon -->
-    <link rel="shortcut icon" href="{{ asset('admin/assets/images/favicon.ico') }}">
+    <link rel="shortcut icon" href="{{ asset('students\assets\images\logo-white.png') }}">
 
     <link href="{{ asset('admin/assets/libs/morris.js/morris.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('admin/assets/libs/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet" type="text/css" />
     <!-- App css -->
+    <link href="{{ asset('admin/assets/css/test.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ asset('admin/assets/css/style.min.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ asset('admin/assets/css/style.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ asset('admin/assets/css/icons.min.css') }}" rel="stylesheet" type="text/css">
@@ -37,19 +38,19 @@
         <div class="logo-box">
             <!-- Brand Logo Light -->
             <a href="index.html" class="logo-light">
-                <img src="{{ asset('admin/assets/images/logo-light.png') }}" alt="logo" class="logo-lg"
-                    height="28">
-                <img src="{{ asset('admin/assets/images/logo-sm.png') }}" alt="small logo" class="logo-sm"
-                    height="28">
+                <img src="{{ asset('students\assets\images\big-logo.png') }}" alt="logo" class="logo-lg"
+                    height="70">
+                <img src="{{ asset('students\assets\images\logo-white.png') }}" alt="small logo" class="logo-sm"
+                    height="70">
             </a>
 
-            <!-- Brand Logo Dark -->
+            {{-- <!-- Brand Logo Dark -->
             <a href="index.html" class="logo-dark">
                 <img src="{{ asset('admin/assets/images/logo-dark.png') }}" alt="dark logo" class="logo-lg"
                     height="28">
                 <img src="{{ asset('admin/assets/images/logo-sm.png') }}" alt="small logo" class="logo-sm"
                     height="28">
-            </a>
+            </a> --}}
         </div>
 
         <!--- Menu -->
@@ -335,18 +336,10 @@
                     <div class="logo-box">
                         <!-- Brand Logo Light -->
                         <a href="index.html" class="logo-light">
-                            <img src="{{ asset('admin/assets/images/logo-light.png') }}" alt="logo"
-                                class="logo-lg" height="22">
-                            <img src="{{ asset('admin/assets/images/logo-sm.png') }}" alt="small logo"
-                                class="logo-sm" height="22">
-                        </a>
-
-                        <!-- Brand Logo Dark -->
-                        <a href="index.html" class="logo-dark">
-                            <img src="{{ asset('admin/assets/images/logo-dark.png') }}" alt="dark logo"
-                                class="logo-lg" height="22">
-                            <img src="{{ asset('admin/assets/images/logo-sm.png') }}" alt="small logo"
-                                class="logo-sm" height="22">
+                            <img src="{{ asset('students\assets\images\big-logo.png') }}" alt="logo" class="logo-lg"
+                                height="70">
+                            <img src="{{ asset('students\assets\images\logo-white.png') }}" alt="small logo" class="logo-sm"
+                                height="70">
                         </a>
                     </div>
 
@@ -383,24 +376,6 @@
                             <div class="dropdown-header noti-title">
                                 <h6 class="text-overflow m-0">Welcome !</h6>
                             </div>
-
-                            <!-- item-->
-                            {{-- <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                <i class="fe-user"></i>
-                                <span>My Account</span>
-                            </a>
-
-                            <!-- item-->
-                            <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                <i class="fe-settings"></i>
-                                <span>Settings</span>
-                            </a>
-
-                            <!-- item-->
-                            <a href="pages-lock-screen.html" class="dropdown-item notify-item">
-                                <i class="fe-lock"></i>
-                                <span>Lock Screen</span>
-                            </a> --}}
 
                             <div class="dropdown-divider"></div>
 
@@ -446,57 +421,7 @@
         </footer>
         <!-- end Footer -->
     </div>
-    {{-- <script>
-        let timeLeft;
-        let durationAway;
 
-        window.addEventListener('blur', function () {
-            // Ghi nhận thời gian hiện tại khi người dùng rời khỏi trang
-            timeLeft = new Date();
-            console.log('Người dùng có thể đã chuyển sang tab khác hoặc ứng dụng khác vào lúc: ' + timeLeft.toLocaleTimeString());
-        });
-
-        window.addEventListener('focus', function () {
-            // Tính toán thời gian người dùng đã rời khỏi khi họ quay trở lại
-            let timeReturned = new Date();
-            if (timeLeft) {
-                durationAway = (timeReturned - timeLeft) / 1000; // Chuyển đổi thời gian rời khỏi từ milliseconds sang seconds
-                console.log('Người dùng đã trở lại trang này vào lúc: ' + timeReturned.toLocaleTimeString() + ' sau khi vắng mặt trong ' + durationAway + ' giây.');
-            } else {
-                console.log('Người dùng đã trở lại trang này vào lúc: ' + timeReturned.toLocaleTimeString());
-            }
-        });
-
-        // Ngăn người dùng sao chép nội dung
-        document.addEventListener('copy', function (event) {
-            event.preventDefault();
-            alert('Sao chép nội dung không được phép.');
-        });
-
-        // Ngăn người dùng mở công cụ phát triển bằng phím tắt F12
-        document.addEventListener('keydown', function (event) {
-            if (event.key === 'F12') {
-                event.preventDefault();
-                alert('Mở công cụ phát triển không được phép.');
-            }
-        });
-
-        // Ngăn người dùng sử dụng chuột phải
-        document.addEventListener('contextmenu', function (event) {
-            event.preventDefault();
-            alert('Sử dụng chuột phải không được phép.');
-        });
-
-    </script> --}}
-    {{-- <script>
-        document.addEventListener('keydown', function(event) {
-            // Kiểm tra nếu người dùng bấm tổ hợp phím "Alt + Tab" (keyCode 9) hoặc bất kỳ phím nào khác
-            if (event.altKey && event.keyCode === 9) {
-                // Hiển thị cảnh báo
-                alert("Hành động của bạn đã được ghi nhận lại!");
-            }
-        });
-    </script> --}}
     <!-- App js -->
     <script src="{{ asset('admin/assets/js/vendor.min.js') }}"></script>
     <script src="{{ asset('admin/assets/js/app.js') }}"></script>

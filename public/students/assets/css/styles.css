@@ -1,4 +1,14 @@
+.swal2-container {
+    z-index: 1050 !important;
+}
+.swal2-title{
+    z-index: 1050 !important;
+}
+html{
+    position: relative;
+}
 body {
+    position: relative;
     font-family: "Roboto", sans-serif;
     font-weight: 400;
     font-style: normal;
@@ -102,3 +112,19 @@ audio {
 .text-center-banner{
     padding-top: 20%;
 }
+
+.btn-group {
+    display: flex;
+    justify-content: space-between; /* Đảm bảo khoảng cách đều giữa các nút */
+    width: 100%; /* Chiều rộng tối đa của nhóm nút */
+}
+
+.btn-group .button_get {
+    flex: 0 0 50%; /* Không cho phép co giãn, đặt cơ sở là 50% */
+    padding: 0 5px; /* Thêm một chút padding nếu cần */
+}
+
+.btn-group .btn {
+    width: 100%; /* Đảm bảo nút mở rộng chiếm đầy chiều rộng có sẵn */
+}
+

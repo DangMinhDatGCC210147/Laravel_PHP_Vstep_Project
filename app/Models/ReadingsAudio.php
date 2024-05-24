@@ -20,4 +20,25 @@ class ReadingsAudio extends Model
     public function questions() {
         return $this->hasMany(Question::class);
     }
+    public function isAudio()
+    {
+        return preg_match('/\.(mp3|wav|aac)$/i', $this->reading_audio_file);
+    }
+
+    /**
+     * Kiểm tra xem đối tượng có phải là hình ảnh không.
+     */
+    public function isImage()
+    {
+        return preg_match('/\.(jpeg|jpg|png|gif|bmp)$/i', $this->reading_audio_file);
+    }
+
+    /**
+     * Kiểm tra xem đối tượng có phải là văn bản không.
+     */
+    public function isText()
+    {
+        // Nếu không phải file âm thanh và không phải hình ảnh, giả sử đó là văn bản
+        return !$this->isAudio() && !$this->isImage();
+    }
 }

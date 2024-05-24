@@ -16,15 +16,17 @@ Route::fallback(function () {
     return view('errors.404');
 });
 
-Route::get('/', [AuthController::class, 'showlogin'])->name('student.index');
-Route::post('/login', [AuthController::class, 'login'])->name('login');
+Route::get('/', [AuthController::class, 'showlogin'])->name('student.login');
+Route::post('/login', [AuthController::class, 'login'])->name('loginAccount');
 
 Route::middleware(['auth'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-    Route::post('/save-image', [StudentController::class, 'store'])->name('saveImage');
-    
+
     //WAITING ROOM
     Route::get('/lounge', [StudentController::class, 'index'])->name('student.index');
+    Route::post('/saving', [StudentController::class, 'store'])->name('image.save');
+    Route::get('/start-test', [StudentController::class, 'startTest'])->name('start-test');
+    Route::get('/exam/{slug}', [StudentController::class, 'showTest'])->name('exam-page');
 
     Route::get('/index-lecturer', [IndexAdminController::class, 'index'])->name('admin.index');
     // INSTRUCTORS

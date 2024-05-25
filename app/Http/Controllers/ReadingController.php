@@ -32,7 +32,7 @@ class ReadingController extends Controller
                 $readingAudio = new ReadingsAudio();
                 $readingAudio->reading_audio_file = $passage;
                 $readingAudio->test_skill_id = $skill_id;
-                $readingAudio->part_name = 'Part ' . ($part - 1 + 1);
+                $readingAudio->part_name = 'Part_' . ($part - 1 + 1);
                 $readingAudio->save();
                 // Each part has 10 questions
                 for ($q = 1; $q <= 10; $q++) {
@@ -41,7 +41,7 @@ class ReadingController extends Controller
                     $question->test_skill_id = $skill_id; // Assuming skill_part_id is provided correctly
                     $question->reading_audio_id = $readingAudio->id;
                     $question->question_number = ($part - 1) * 10 + $q;
-                    $question->part_name = 'Part ' . ceil($question->question_number / 10);
+                    $question->part_name = 'Part_' . ceil($question->question_number / 10);
                     $question->question_text = $questionData['text'];
                     $question->question_type = 'Multiple Choice Reading'; // Assuming all are multiple choice
                     $question->correct_answer = $questionData['options'][$questionData['correct_answer']];

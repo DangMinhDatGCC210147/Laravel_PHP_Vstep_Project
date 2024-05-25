@@ -19,7 +19,7 @@ class SpeakingController extends Controller
                 $readingsAudio = new ReadingsAudio([
                     'test_skill_id' => $skill_id,
                     'reading_audio_file' => $request->input("part1_question_$i"),
-                    'part_name' => 'Part 1',
+                    'part_name' => 'Part_1',
                 ]);
                 $readingsAudio->save();
 
@@ -31,7 +31,7 @@ class SpeakingController extends Controller
                     'question_text' => $questionText,
                     'question_type' => 'Text Speaking',
                     'question_number' => $i,
-                    'part_name' => 'Part 1'
+                    'part_name' => 'Part_1'
                 ]);
                 $question->save();
                 // Save options for Part 1
@@ -49,7 +49,7 @@ class SpeakingController extends Controller
             $readingsAudio2 = new ReadingsAudio([
                 'test_skill_id' => $skill_id,
                 'reading_audio_file' => $request->input("part2_text"),
-                'part_name' => 'Part 2',
+                'part_name' => 'Part_2',
             ]);
             $readingsAudio2->save();
 
@@ -59,7 +59,7 @@ class SpeakingController extends Controller
                 'reading_audio_id' => $readingsAudio2->id,
                 'question_text' => $part2Text,
                 'question_type' => 'Text Speaking',
-                'part_name' => 'Part 2',
+                'part_name' => 'Part_2',
                 'question_number' => 1  // Assuming only one question in Part 2
             ]);
             $questionPart2->save();
@@ -70,7 +70,7 @@ class SpeakingController extends Controller
                 $listeningAudio3 = new ReadingsAudio();
                 $listeningAudio3->reading_audio_file = $imagePath;
                 $listeningAudio3->test_skill_id = $skill_id;
-                $listeningAudio3->part_name = 'Part 3';
+                $listeningAudio3->part_name = 'Part_3';
                 $listeningAudio3->save();
 
                 $questionTextPart3 = $request->input('part3_question');
@@ -80,7 +80,7 @@ class SpeakingController extends Controller
                     'question_text' => $questionTextPart3,
                     'question_type' => 'Text Speaking',
                     'question_number' => 1,  // Assuming only one question in Part 3
-                    'part_name' => 'Part 3',
+                    'part_name' => 'Part_3',
                 ]);
                 $questionPart3->save();
 

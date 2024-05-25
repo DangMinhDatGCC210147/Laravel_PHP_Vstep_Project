@@ -19,6 +19,6 @@ class CheckLecturerRole
         if (Auth::check() && Auth::user()->lecturer_id !== null) {
             return $next($request);
         }
-        return redirect('/logout');
+        return redirect('/lounge');
     }
 }

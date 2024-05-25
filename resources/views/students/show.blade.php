@@ -8,6 +8,7 @@
             'Reading' => 'bg-success',
             'Writing' => 'bg-secondary',
         ];
+        $skillIds = $skills->pluck('id')->sortDesc()->values(); // Lấy danh sách các skill ID theo thứ tự giảm dần
     @endphp
     <div class="px-3">
         <!-- Start Content-->
@@ -15,27 +16,21 @@
             <div class="card">
                 <div class="row text-dark card-header navbar">
                     <div class="col-md-1">
-                        <ul class="topbar-menu d-flex align-items-center justify-center">
-                            <li class="nav-link d-flex" id="theme-mode">
-                                <button class="btn btn-warning"><i class="bx bx-moon font-size-18"></i></button>
-                            </li>
-                        </ul>
+                        <button class="btn btn-warning d-flex justify-content-center" id="theme-mode"><i class="bx bx-moon font-size-18"></i></button>
                     </div>
                     <div class="col-md-4 text-start">
                         <h2>{{ $test->test_name }}</h2>
                     </div>
                     <div class="col-md-3 text-center">
                         <h2>Timer: 
-                        @foreach ($skills as $skill)
-                            <span class="badge bg-primary" id="skill-{{ $skill->id }}-timer }}">
-                                {{ $skill->time_limit }}
+                            <span class="badge bg-primary" id="skill-timer">
+                                47:00
                             </span>
-                        @endforeach
                         </h2>                     
                     </div>
                     <div class="col-md-4 text-end">
-                        <div class="badge bg-info"><span style="font-size: 15px">Đã trả lời: 0/10</span></div>
-                        <button class="btn btn-success">Nộp bài</button>
+                        <div class="badge bg-info" id="answered-count"><span style="font-size: 15px"></span></div>
+                        <button class="btn btn-success" id="submitTestButton">Nộp bài</button>
                     </div>
                 </div>
                 <div class="m-2">
@@ -62,7 +57,7 @@
                             @endforeach
                         </div>
                         <div class="col-md-6 overflow-auto border-style" style="height: 32vw;">
-                            <form action="" method="post">
+                            <form action="" method="post" id="testForm">
                                 @foreach ($skills as $skill)
                                     @foreach ($skill->questions as $question)
                                         <div class="mb-3 question-block skill-{{ $skill->id }}-part-{{ $question->part_name }}"
@@ -102,9 +97,9 @@
                     @foreach ($skill->questions as $part)
                         <!-- Assuming each skill has parts -->
                         @if (!in_array($part->part_name, $usedParts))
-                            <button class="btn btn-secondary btn-sm"
-                                data-skill-part="skill-{{ $skill->id }}-part-{{ $part->part_name }}">
-                                {{ $part->part_name }}
+                            <button class="btn btn-secondary btn-sm skill-part-btn"
+                                data-skill-part="skill-{{ $skill->id }}-part-{{ $part->part_name }}" data-time-limit="{{ $skill->time_limit }}" data-skill-id="{{ $skill->id }}">
+                                {{ str_replace('_', ' ', $part->part_name) }}
                             </button>
                             @php
                                 $usedParts[] = $part->part_name;
@@ -115,7 +110,6 @@
                 <div class="skill-timer badge {{ $badgeColors[$skill->skill_name] ?? 'bg-primary' }}">
                     {{ $skill->skill_name }} -
                     {{ $skill->time_limit == '01:00:00' ? '60' : explode(':', $skill->time_limit)[1] }}
-
                 </div>
             </div>
         @endforeach
@@ -123,8 +117,9 @@
         <!-- Controls Column -->
         <div class="skill-section">
             <div class="btn-group">
-                <button class="btn btn-info mb-2">Tiếp tục</button>
+                <button class="btn btn-info mb-2" id="next-skill-btn">Tiếp tục</button>
                 <button class="btn btn-primary mb-2">Lưu bài</button>
+                <button class="btn btn-danger mb-2" id="reset-btn">Làm mới</button>
             </div>
         </div>
     </footer>
@@ -132,51 +127,147 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
         var audioElements;
-        var initialSkillParts = @json($skills);
-        var initialSkillPart = initialSkillParts[3].id;
-        var skillPartIdentifier = 'skill-' + initialSkillPart + '-part-Part 1';
-
+        var skillIds = @json($skillIds);
+        var currentSkillIndex = 0; // Chỉ số của kỹ năng hiện tại
+        var initialSkillPart = skillIds[currentSkillIndex];
+        var skillPartIdentifier = 'skill-' + initialSkillPart + '-part-Part_1';
+        var answeredCount = {};
+        var partAnswered = {};
+    
         $(document).ready(function() {
             audioElements = $('audio');
-
-            // Function to show the specified skill part and update button colors
-            function showSkillPart(skillPart) {
+    
+            function formatTimeLimit(timeLimit) {
+                if (timeLimit === '01:00:00') {
+                    return '60:00';
+                }
+                const parts = timeLimit.split(':');
+                return parts[1] + ':' + parts[2];
+            }
+    
+            function showSkillPart(skillPart, timeLimit, skillId) {
                 // Pause and reset all audio elements
                 audioElements.each(function() {
                     this.pause();
                     this.currentTime = 0;
                 });
-
                 // Hide all content and question blocks
                 $('.content-block, .question-block').hide();
-
                 // Show the specified skill part
                 $('[class*="' + skillPart + '"]').show();
-
                 // Update button colors
-                $('.footer .btn-group button').removeClass('btn-warning').addClass('btn-secondary');
-                $('.footer .btn-group button[data-skill-part="' + skillPart + '"]').removeClass('btn-secondary')
+                $('.skill-part-btn').removeClass('btn-warning').addClass('btn-secondary');
+                $('.skill-part-btn[data-skill-part="' + skillPart + '"]').removeClass('btn-secondary')
                     .addClass('btn-warning');
-
                 // Save the current skill part to local storage
                 localStorage.setItem('currentSkillPart', skillPart);
+                // Update the timer display
+                $('#skill-timer').text(formatTimeLimit(timeLimit));
+                // Update the answered count display
+                updateAnsweredCount(skillPart);
+                // Scroll to the top of the container
+                $('#content-area').scrollTop(0);
+                $('#testForm').closest('.col-md-6').scrollTop(0);
             }
-
-            // Get the saved skill part from local storage or default to "Listening Part 1"
+    
+            function updateAnsweredCount(skillPart) {
+                var answered = 0;
+                var total = $('[class*="' + skillPart + '"].question-block').length;
+                $('[class*="' + skillPart + '"].question-block').each(function() {
+                    if ($(this).find('input[type=radio]:checked').length > 0) {
+                        answered++;
+                    }
+                });
+                $('#answered-count span').text('Đã trả lời: ' + answered + '/' + total);
+            }
+    
+            function updateSkillButtons() {
+                $('.skill-part-btn').prop('disabled', true); // Disable all buttons
+                $('.skill-part-btn[data-skill-id="' + skillIds[currentSkillIndex] + '"]').prop('disabled', false); // Enable buttons for current skill
+                // Save the current skill index to local storage
+                localStorage.setItem('currentSkillIndex', currentSkillIndex);
+            }
+    
+            // Get the saved skill part from local storage or default to the initial skill part
             var savedSkillPart = localStorage.getItem('currentSkillPart') || skillPartIdentifier;
-
-            // Show the saved skill part or default
-            showSkillPart(savedSkillPart);
-
-            $('.footer .btn-group button').click(function() {
-                var skillPart = $(this).data('skill-part');
-                console.log(skillPart);
-                showSkillPart(skillPart);
+            var savedTimeLimit = localStorage.getItem('currentSkillPartTimeLimit') || '60:00';
+    
+            // Initialize partAnswered object
+            $('[class*="question-block"]').each(function() {
+                var skillPart = $(this).attr('class').split(' ').find(cls => cls.startsWith('skill-'));
+                partAnswered[skillPart] = partAnswered[skillPart] || {};
+                var questionId = $(this).find('input[type=radio]').attr('name');
+                partAnswered[skillPart][questionId] = false;
             });
-
+    
+            // Get the saved skill index from local storage or default to 0
+            currentSkillIndex = parseInt(localStorage.getItem('currentSkillIndex')) || 0;
+    
+            // Show the saved skill part or default
+            var initialSkillId = skillIds[currentSkillIndex];
+            showSkillPart(savedSkillPart, savedTimeLimit, initialSkillId);
+    
+            // Update the skill buttons state
+            updateSkillButtons();
+    
+            $('.skill-part-btn').click(function() {
+                var skillPart = $(this).data('skill-part');
+                var timeLimit = $(this).data('time-limit');
+                var skillId = $(this).data('skill-id');
+                showSkillPart(skillPart, timeLimit, skillId);
+                localStorage.setItem('currentSkillPartTimeLimit', timeLimit);
+            });
+    
+            $('#next-skill-btn').click(function() {
+                Swal.fire({
+                    title: 'Xác nhận',
+                    text: "Bạn sẽ không thể quay lại kỹ năng trước đó. Bạn có chắc chắn muốn tiếp tục?",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'OK',
+                    cancelButtonText: 'Hủy'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        currentSkillIndex++;
+                        if (currentSkillIndex >= skillIds.length) {
+                            currentSkillIndex = skillIds.length - 1; // Ensure we don't go out of bounds
+                        }
+                        updateSkillButtons();
+                        var nextSkillId = skillIds[currentSkillIndex];
+                        var nextSkillPart = 'skill-' + nextSkillId + '-part-Part_1';
+                        var nextTimeLimit = $('[data-skill-id="' + nextSkillId + '"]').data('time-limit');
+                        showSkillPart(nextSkillPart, nextTimeLimit, nextSkillId);
+                    }
+                });
+            });
+    
             $('#submitTestButton').click(function() {
                 $('#testForm').submit();
             });
+    
+            $('input[type=radio]').change(function() {
+                var skillPart = $(this).closest('.question-block').attr('class').split(' ').find(cls => cls.startsWith('skill-'));
+                var questionId = $(this).attr('name');
+                
+                if (!partAnswered[skillPart][questionId]) {
+                    partAnswered[skillPart][questionId] = true;
+                    if (!answeredCount[skillPart]) {
+                        answeredCount[skillPart] = 0;
+                    }
+                    answeredCount[skillPart]++;
+                }
+    
+                updateAnsweredCount(skillPart);
+            });
+
+            $('#reset-btn').click(function() {
+                // Clear localStorage
+                localStorage.clear();
+                // Reload the page to reset everything
+                location.reload();
+            });
         });
-    </script>
+    </script>       
 @endsection

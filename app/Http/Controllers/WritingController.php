@@ -17,7 +17,7 @@ class WritingController extends Controller
             $readingsAudio1 = new ReadingsAudio();
             $readingsAudio1->test_skill_id = $skill_id;
             $readingsAudio1->reading_audio_file = $request->input('passage1');
-            $readingsAudio1->part_name = 'Part 1';
+            $readingsAudio1->part_name = 'Part_1';
             $readingsAudio1->save();
 
             $question1 = new Question();
@@ -26,14 +26,14 @@ class WritingController extends Controller
             $question1->question_text = $request->input('question1');
             $question1->question_type = 'Text Writing';
             $question1->question_number = "1";
-            $question1->part_name = "Part 1";
+            $question1->part_name = "Part_1";
             $question1->save();
 
             // Lưu Part 2
             $readingsAudio2 = new ReadingsAudio();
             $readingsAudio2->test_skill_id = $skill_id;
             $readingsAudio2->reading_audio_file = $request->input('passage2');
-            $readingsAudio2->part_name = 'Part 2';
+            $readingsAudio2->part_name = 'Part_2';
             $readingsAudio2->save();
 
             $question2 = new Question();
@@ -42,7 +42,7 @@ class WritingController extends Controller
             $question2->question_text = $request->input('question2');
             $question2->question_type = 'Text Writing';
             $question2->question_number = "2";
-            $question2->part_name = "Part 2";
+            $question2->part_name = "Part_2";
             $question2->save();
 
             return redirect()->route('testSkills.show', ['test_slug' => $test_slug])->with('success', 'Writing skills saved successfully.');

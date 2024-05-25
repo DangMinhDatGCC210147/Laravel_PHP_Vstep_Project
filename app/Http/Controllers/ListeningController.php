@@ -34,7 +34,7 @@ class ListeningController extends Controller
                 $listeningAudio = new ReadingsAudio();
                 $listeningAudio->reading_audio_file = $audioPaths[$part];
                 $listeningAudio->test_skill_id = $skill_id;
-                $listeningAudio->part_name = 'Part ' . $part;
+                $listeningAudio->part_name = 'Part_' . $part;
                 $listeningAudio->save();
                 for ($q = $range['start']; $q <= $range['end']; $q++) {
                     $questionData = $request->questions[$q];
@@ -43,7 +43,7 @@ class ListeningController extends Controller
                     $question->test_skill_id = $skill_id;
                     $question->reading_audio_id = $listeningAudio->id;
                     $question->question_number = $q;
-                    $question->part_name = "Part " . $part;
+                    $question->part_name = "Part_" . $part;
                     $question->question_text = $questionData['text'];
                     $question->question_type = 'Multiple Choice Listening';
                     $question->correct_answer = $questionData['options'][$questionData['correct_answer']];

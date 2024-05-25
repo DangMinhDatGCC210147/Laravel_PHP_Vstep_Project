@@ -19,7 +19,7 @@ class CheckStudentRole
         if (Auth::check() && Auth::user()->student_id !== null) {
             return $next($request);
         }
-        return redirect('/logout');
+        return redirect('/index-lecturer');
     }
 
 }

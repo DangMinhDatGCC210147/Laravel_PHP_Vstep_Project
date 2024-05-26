@@ -41,7 +41,7 @@
                                     <div class="mb-3 content-block skill-{{ $skill->id }}-part-{{ $readingAudio->part_name }}"
                                         style="display: none;">
                                         @if ($readingAudio->isAudio())
-                                            <audio controls>
+                                            <audio controls controlsList="nodownload" id="audioPlayer">
                                                 <source src="{{ asset('storage/' . $readingAudio->reading_audio_file) }}"
                                                     type="audio/mpeg">
                                                 Your browser does not support the audio element.
@@ -133,141 +133,9 @@
         var skillPartIdentifier = 'skill-' + initialSkillPart + '-part-Part_1';
         var answeredCount = {};
         var partAnswered = {};
-    
-        $(document).ready(function() {
-            audioElements = $('audio');
-    
-            function formatTimeLimit(timeLimit) {
-                if (timeLimit === '01:00:00') {
-                    return '60:00';
-                }
-                const parts = timeLimit.split(':');
-                return parts[1] + ':' + parts[2];
-            }
-    
-            function showSkillPart(skillPart, timeLimit, skillId) {
-                // Pause and reset all audio elements
-                audioElements.each(function() {
-                    this.pause();
-                    this.currentTime = 0;
-                });
-                // Hide all content and question blocks
-                $('.content-block, .question-block').hide();
-                // Show the specified skill part
-                $('[class*="' + skillPart + '"]').show();
-                // Update button colors
-                $('.skill-part-btn').removeClass('btn-warning').addClass('btn-secondary');
-                $('.skill-part-btn[data-skill-part="' + skillPart + '"]').removeClass('btn-secondary')
-                    .addClass('btn-warning');
-                // Save the current skill part to local storage
-                localStorage.setItem('currentSkillPart', skillPart);
-                // Update the timer display
-                $('#skill-timer').text(formatTimeLimit(timeLimit));
-                // Update the answered count display
-                updateAnsweredCount(skillPart);
-                // Scroll to the top of the container
-                $('#content-area').scrollTop(0);
-                $('#testForm').closest('.col-md-6').scrollTop(0);
-            }
-    
-            function updateAnsweredCount(skillPart) {
-                var answered = 0;
-                var total = $('[class*="' + skillPart + '"].question-block').length;
-                $('[class*="' + skillPart + '"].question-block').each(function() {
-                    if ($(this).find('input[type=radio]:checked').length > 0) {
-                        answered++;
-                    }
-                });
-                $('#answered-count span').text('Đã trả lời: ' + answered + '/' + total);
-            }
-    
-            function updateSkillButtons() {
-                $('.skill-part-btn').prop('disabled', true); // Disable all buttons
-                $('.skill-part-btn[data-skill-id="' + skillIds[currentSkillIndex] + '"]').prop('disabled', false); // Enable buttons for current skill
-                // Save the current skill index to local storage
-                localStorage.setItem('currentSkillIndex', currentSkillIndex);
-            }
-    
-            // Get the saved skill part from local storage or default to the initial skill part
-            var savedSkillPart = localStorage.getItem('currentSkillPart') || skillPartIdentifier;
-            var savedTimeLimit = localStorage.getItem('currentSkillPartTimeLimit') || '60:00';
-    
-            // Initialize partAnswered object
-            $('[class*="question-block"]').each(function() {
-                var skillPart = $(this).attr('class').split(' ').find(cls => cls.startsWith('skill-'));
-                partAnswered[skillPart] = partAnswered[skillPart] || {};
-                var questionId = $(this).find('input[type=radio]').attr('name');
-                partAnswered[skillPart][questionId] = false;
-            });
-    
-            // Get the saved skill index from local storage or default to 0
-            currentSkillIndex = parseInt(localStorage.getItem('currentSkillIndex')) || 0;
-    
-            // Show the saved skill part or default
-            var initialSkillId = skillIds[currentSkillIndex];
-            showSkillPart(savedSkillPart, savedTimeLimit, initialSkillId);
-    
-            // Update the skill buttons state
-            updateSkillButtons();
-    
-            $('.skill-part-btn').click(function() {
-                var skillPart = $(this).data('skill-part');
-                var timeLimit = $(this).data('time-limit');
-                var skillId = $(this).data('skill-id');
-                showSkillPart(skillPart, timeLimit, skillId);
-                localStorage.setItem('currentSkillPartTimeLimit', timeLimit);
-            });
-    
-            $('#next-skill-btn').click(function() {
-                Swal.fire({
-                    title: 'Xác nhận',
-                    text: "Bạn sẽ không thể quay lại kỹ năng trước đó. Bạn có chắc chắn muốn tiếp tục?",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'OK',
-                    cancelButtonText: 'Hủy'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        currentSkillIndex++;
-                        if (currentSkillIndex >= skillIds.length) {
-                            currentSkillIndex = skillIds.length - 1; // Ensure we don't go out of bounds
-                        }
-                        updateSkillButtons();
-                        var nextSkillId = skillIds[currentSkillIndex];
-                        var nextSkillPart = 'skill-' + nextSkillId + '-part-Part_1';
-                        var nextTimeLimit = $('[data-skill-id="' + nextSkillId + '"]').data('time-limit');
-                        showSkillPart(nextSkillPart, nextTimeLimit, nextSkillId);
-                    }
-                });
-            });
-    
-            $('#submitTestButton').click(function() {
-                $('#testForm').submit();
-            });
-    
-            $('input[type=radio]').change(function() {
-                var skillPart = $(this).closest('.question-block').attr('class').split(' ').find(cls => cls.startsWith('skill-'));
-                var questionId = $(this).attr('name');
-                
-                if (!partAnswered[skillPart][questionId]) {
-                    partAnswered[skillPart][questionId] = true;
-                    if (!answeredCount[skillPart]) {
-                        answeredCount[skillPart] = 0;
-                    }
-                    answeredCount[skillPart]++;
-                }
-    
-                updateAnsweredCount(skillPart);
-            });
-
-            $('#reset-btn').click(function() {
-                // Clear localStorage
-                localStorage.clear();
-                // Reload the page to reset everything
-                location.reload();
-            });
-        });
-    </script>       
+        var countdownTimer;
+        var timeRemaining;
+        var currentSkillTimeLimit;
+    </script>     
+    <script src="{{ asset('students/assets/js/test_page.js') }}"></script>
 @endsection

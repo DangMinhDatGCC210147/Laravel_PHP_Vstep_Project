@@ -31,7 +31,7 @@ body {
 }
 
 .website-logo img {
-    width: 100px;
+    width: 90px;
 }
 
 .website-logo .logo {
@@ -39,14 +39,16 @@ body {
     position: relative;
     justify-content: center;
     align-items: center;
+    padding-left: 25px;
+    top: -20px;
 }
-
+/* ĐÂY LÀ KỊCH THƯỚC HIỂN THỊ LOGO */
 .website-logo .logo img {
-    width: 300px;
+    width: 14vw;
 }
 
 .website-logo-inside img {
-    width: 100px;
+    width: 90px;
 }
 
 .website-logo-inside .logo {

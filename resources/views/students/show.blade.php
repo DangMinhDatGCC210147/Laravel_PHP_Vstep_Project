@@ -16,17 +16,18 @@
             <div class="card">
                 <div class="row text-dark card-header navbar">
                     <div class="col-md-1">
-                        <button class="btn btn-warning d-flex justify-content-center" id="theme-mode"><i class="bx bx-moon font-size-18"></i></button>
+                        <button class="btn btn-warning d-flex justify-content-center" id="theme-mode"><i
+                                class="bx bx-moon font-size-18"></i></button>
                     </div>
                     <div class="col-md-4 text-start">
                         <h2>{{ $test->test_name }}</h2>
                     </div>
                     <div class="col-md-3 text-center">
-                        <h2>Timer: 
+                        <h2>Timer:
                             <span class="badge bg-primary" id="skill-timer">
                                 47:00
                             </span>
-                        </h2>                     
+                        </h2>
                     </div>
                     <div class="col-md-4 text-end">
                         <div class="badge bg-info" id="answered-count"><span style="font-size: 15px"></span></div>
@@ -57,8 +58,17 @@
                             @endforeach
                         </div>
                         <div class="col-md-6 overflow-auto border-style" style="height: 32vw;">
-                            <form action="" method="post" id="testForm">
-                                @foreach ($skills as $skill)
+                            @foreach ($skills as $skill)
+                                <form
+                                    @if ($skill->skill_name == 'Listening') action="/saveListening"
+                                    @elseif($skill->skill_name == 'Speaking')
+                                        action="/saveSpeaking"
+                                    @elseif($skill->skill_name == 'Reading')
+                                        action="/saveReading"
+                                    @elseif($skill->skill_name == 'Writing')
+                                        action="/saveWriting" @endif
+                                    method="post" id="testForm-{{ $skill->id }}" class="testForm">
+                                    @csrf
                                     @foreach ($skill->questions as $question)
                                         <div class="mb-3 question-block skill-{{ $skill->id }}-part-{{ $question->part_name }}"
                                             style="display: none;">
@@ -69,8 +79,9 @@
                                             @foreach ($question->options as $index => $option)
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="radio"
-                                                        name="question_{{ $question->id }}" id="option_{{ $option->id }}"
-                                                        value="{{ $option->id }}">
+                                                        name="responses[{{ $question->id }}]"
+                                                        id="option_{{ $option->id }}"
+                                                        value="{{ $option->option_text }}">
                                                     <label class="form-check-label" for="option_{{ $option->id }}">
                                                         {{ chr(65 + $index) }}. {{ $option->option_text }}
                                                     </label>
@@ -78,8 +89,9 @@
                                             @endforeach
                                         </div>
                                     @endforeach
-                                @endforeach
-                            </form>
+                                    <input type="hidden" name="skill_id" value="{{ $skill->id }}">
+                                </form>
+                            @endforeach
                         </div>
                     </div>
                 </div>
@@ -98,7 +110,8 @@
                         <!-- Assuming each skill has parts -->
                         @if (!in_array($part->part_name, $usedParts))
                             <button class="btn btn-secondary btn-sm skill-part-btn"
-                                data-skill-part="skill-{{ $skill->id }}-part-{{ $part->part_name }}" data-time-limit="{{ $skill->time_limit }}" data-skill-id="{{ $skill->id }}">
+                                data-skill-part="skill-{{ $skill->id }}-part-{{ $part->part_name }}"
+                                data-time-limit="{{ $skill->time_limit }}" data-skill-id="{{ $skill->id }}">
                                 {{ str_replace('_', ' ', $part->part_name) }}
                             </button>
                             @php
@@ -118,7 +131,7 @@
         <div class="skill-section">
             <div class="btn-group">
                 <button class="btn btn-info mb-2" id="next-skill-btn">Tiếp tục</button>
-                <button class="btn btn-primary mb-2">Lưu bài</button>
+                <button class="btn btn-primary mb-2" id="save-btn">Lưu bài</button>
                 <button class="btn btn-danger mb-2" id="reset-btn">Làm mới</button>
             </div>
         </div>
@@ -126,6 +139,7 @@
     <!-- End Footer -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
+
         var audioElements;
         var skillIds = @json($skillIds);
         var currentSkillIndex = 0; // Chỉ số của kỹ năng hiện tại
@@ -136,6 +150,6 @@
         var countdownTimer;
         var timeRemaining;
         var currentSkillTimeLimit;
-    </script>     
+    </script>
     <script src="{{ asset('students/assets/js/test_page.js') }}"></script>
 @endsection

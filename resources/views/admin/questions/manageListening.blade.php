@@ -43,7 +43,7 @@
                                         class="form-control mb-2" placeholder="Enter question {{ $q }}">
                                     <div class="row">
                                         @foreach (range(1, 4) as $option)
-                                            <div class="col-md-6">
+                                            <div class="col-md-12">
                                                 <div class="form-check mb-2">
                                                     <input class="form-check-input" type="radio"
                                                         name="questions[{{ $q }}][correct_answer]"
@@ -111,7 +111,7 @@
                                         class="form-control mb-2" placeholder="Enter question {{ $q }}">
                                     <div class="row">
                                         @foreach (range(1, 4) as $option)
-                                            <div class="col-md-6">
+                                            <div class="col-md-12">
                                                 <div class="form-check mb-2">
                                                     <input class="form-check-input" type="radio"
                                                         name="questions[{{ $q }}][correct_answer]"

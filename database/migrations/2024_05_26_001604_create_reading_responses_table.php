@@ -18,10 +18,15 @@ return new class extends Migration
                 ->references('id')
                 ->on('test_skills')
                 ->onDelete('cascade');
+            $table->unsignedBigInteger('question_id');
+            $table->foreign('question_id')
+                ->references('id')
+                ->on('questions')
+                ->onDelete('cascade');
             $table->unsignedBigInteger('student_id');
             $table->foreign('student_id')
                 ->references('id')
-                ->on('students')
+                ->on('users')
                 ->onDelete('cascade');
             $table->string('text_response');
             $table->timestamps();

@@ -58,7 +58,7 @@ $(document).ready(function () {
         updateAnsweredCount(skillPart);
         // Scroll to the top of the container
         $('#content-area').scrollTop(0);
-        $('#testForm').closest('.col-md-6').scrollTop(0);
+        $('.testForm').closest('.col-md-6').scrollTop(0);
     }
 
     function updateAnsweredCount(skillPart) {
@@ -161,9 +161,9 @@ $(document).ready(function () {
         });
     });
 
-    $('#submitTestButton').click(function () {
-        $('#testForm').submit();
-    });
+    // $('#submitTestButton').click(function () {
+    //     $('#testForm').submit();
+    // });
 
     $('input[type=radio]').change(function () {
         var skillPart = $(this).closest('.question-block').attr('class').split(' ').find(cls => cls.startsWith('skill-'));
@@ -189,21 +189,21 @@ $(document).ready(function () {
 });
 
 // Ngăn chặn các tổ hợp phím phổ biến mở Developer Tools
-document.addEventListener('keydown', function (event) {
-    if (event.keyCode == 123) { // F12
-        event.preventDefault();
-    } else if (event.ctrlKey && event.shiftKey && event.keyCode == 73) { // Ctrl+Shift+I
-        event.preventDefault();
-    } else if (event.ctrlKey && event.shiftKey && event.keyCode == 74) { // Ctrl+Shift+J
-        event.preventDefault();
-    } else if (event.ctrlKey && event.keyCode == 85) { // Ctrl+U
-        event.preventDefault();
-    } else if (event.ctrlKey && event.keyCode == 83) { // Ctrl+S
-        event.preventDefault();
-    } else if (event.ctrlKey && event.keyCode == 80) { // Ctrl+P
-        event.preventDefault();
-    }
-});
+// document.addEventListener('keydown', function (event) {
+//     if (event.keyCode == 123) { // F12
+//         event.preventDefault();
+//     } else if (event.ctrlKey && event.shiftKey && event.keyCode == 73) { // Ctrl+Shift+I
+//         event.preventDefault();
+//     } else if (event.ctrlKey && event.shiftKey && event.keyCode == 74) { // Ctrl+Shift+J
+//         event.preventDefault();
+//     } else if (event.ctrlKey && event.keyCode == 85) { // Ctrl+U
+//         event.preventDefault();
+//     } else if (event.ctrlKey && event.keyCode == 83) { // Ctrl+S
+//         event.preventDefault();
+//     } else if (event.ctrlKey && event.keyCode == 80) { // Ctrl+P
+//         event.preventDefault();
+//     }
+// });
 
 // Ngăn chặn chuột phải
 document.addEventListener('contextmenu', function (event) {
@@ -237,7 +237,7 @@ function detectDevTools() {
             window.location.reload();
         }
     });
-    console.log(element);
+    // console.log(element);
 }
 
 setInterval(detectDevTools, 1000);
@@ -277,5 +277,44 @@ document.addEventListener('DOMContentLoaded', function () {
     // Xóa sự kiện ngăn chặn tua khi âm thanh bị tạm dừng
     audio.addEventListener('pause', function () {
         audio.removeEventListener('seeking', preventSeeking);
+    });
+});
+
+$(document).ready(function() {
+    $('#save-btn').click(function(e) {
+        e.preventDefault(); // Prevent default form submission
+
+        var totalForms = $('.testForm').length; // Total number of forms
+        var completedForms = 0; // Counter for successfully submitted forms
+        var popupShown = false; // Flag to check if popup is shown
+
+        // Iterate through each form and send it via AJAX
+        $('.testForm').each(function() {
+            var form = $(this);
+            var actionUrl = form.attr('action'); // Get action from form attribute
+
+            $.ajax({
+                url: actionUrl,
+                type: 'POST',
+                data: form.serialize(), // Serialize form data
+                success: function(response) {
+                    console.log('Data saved for form with action: ' + actionUrl);
+                    completedForms++; // Increment counter on success
+                    if ((completedForms === totalForms-1) && !popupShown) { // Check if all forms are submitted and popup not shown
+                        popupShown = true; // Set the flag to true
+                        Swal.fire({ // Use Swal.fire() to create a SweetAlert2 popup
+                            title: 'Success!',
+                            text: 'All responses have been saved successfully.',
+                            icon: 'success',
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error saving data for form with action: ' + actionUrl);
+                }
+            });
+        });
     });
 });

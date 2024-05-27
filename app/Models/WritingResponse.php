@@ -8,12 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class WritingResponse extends Model
 {
     use HasFactory;
-    protected $fillable = ['skill_id', 'student_id', 'text_response'];
-
-    // public function skillPart()
-    // {
-    //     return $this->belongsTo(SkillPart::class);
-    // }
+    protected $fillable = ['skill_id', 'student_id', 'question_id', 'text_response'];
 
     public function student()
     {

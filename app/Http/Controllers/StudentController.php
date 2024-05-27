@@ -93,14 +93,8 @@ class StudentController extends Controller
             $order = ['Listening', 'Reading', 'Writing', 'Speaking'];
             return array_search($skill->skill_name, $order);
         }); 
+        
         return view('students.show', ['test' => $test, 'skills' => $sortedSkills ]);
     }  
-    // public function showTest($slug)
-    // {
-    //     $test = Test::with(['testSkills.questions.readingsAudio'])
-    //                 ->where('slug', $slug)
-    //                 ->firstOrFail();
-    //     return view('students.show', compact('test'));
-    // }
     
 }

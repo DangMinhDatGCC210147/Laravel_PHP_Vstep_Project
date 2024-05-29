@@ -46,7 +46,7 @@ class ListeningController extends Controller
                     $question->part_name = "Part_" . $part;
                     $question->question_text = $questionData['text'];
                     $question->question_type = 'Multiple Choice Listening';
-                    $question->correct_answer = $questionData['options'][$questionData['correct_answer']];
+                    // $question->correct_answer = $questionData['options'][$questionData['correct_answer']];
                     $question->save();
 
                     // Save options for the question
@@ -54,6 +54,7 @@ class ListeningController extends Controller
                         $option = new Option();
                         $option->question_id = $question->id;
                         $option->option_text = $optionText;
+                        $option->correct_answer = ($index == $questionData['correct_answer']);
                         $option->save();
                     }
                 }

@@ -19,6 +19,7 @@ return new class extends Migration
                 ->on('questions')
                 ->onDelete('cascade');
             $table->longText('option_text');
+            $table->boolean('correct_answer')->default(false);
             $table->timestamps();
         });
     }

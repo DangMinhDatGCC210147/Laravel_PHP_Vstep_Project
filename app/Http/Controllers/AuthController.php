@@ -17,17 +17,16 @@ class AuthController extends Controller
 
         $user->name = $request->name;
         $user->email = $request->email;
-        $user->lecturer_id = $request->lecturer_id;
-        $user->student_id = $request->student_id;
-        if($user->lecturer_id != null){
-            $user->role = "1";
-        }else{
-            $user->role = "2";
-        }
+        $user->account_id = $request->account_id;
+        $user->role = $request->role;
         $user->password = Hash::make($request->password);
         $user->save();
         // return back()->with('success','Registered successfully');
-        return redirect()->route('tableLecturer.index')->with('success', 'Registered successfully');
+        if($user->role == 1){
+            return redirect()->route('tableLecturer.index')->with('success', 'Registered successfully');
+        }else{
+            return redirect()->route('tableStudent.index')->with('success', 'Registered successfully');
+        }
     }
 
     public function showlogin()
@@ -49,14 +48,13 @@ class AuthController extends Controller
             $user = Auth::user();
         
             // Lưu thông tin người dùng vào session
-            $request->session()->put('lecturer_id', $user->lecturer_id);
-            $request->session()->put('student_id', $user->student_id);
+            $request->session()->put('role', $user->role);
             $request->session()->put('user_name', $user->name);
             $request->session()->put('user_email', $user->email);
             $request->session()->put('account_id', $user->id);
             // Kiểm tra thông tin session đã lưu
             // dd($request->session()->all());
-            if (is_null($user->student_id)) {
+            if ($user->role == 1) {
                 return redirect()->route('admin.index')->with('success', 'Login successfully!');
             } else {
                 return redirect()->route('student.index')->with('success', 'Login successfully!');

@@ -24,12 +24,11 @@ return new class extends Migration
                 ->on('readings_audios')
                 ->onDelete('cascade');
             $table->integer('question_number')->nullable();
-            $table->string('part_name')->nullable();  
+            $table->string('part_name')->nullable();
             $table->longText('question_text');
             $table->string('question_type');
-            $table->longText('correct_answer')->nullable();
             $table->timestamps();
-        });        
+        });
     }
 
     /**

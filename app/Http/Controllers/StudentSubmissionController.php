@@ -30,7 +30,7 @@ class StudentSubmissionController extends Controller
             );
         }
     
-        return back()->with('success', 'The reading skill answer has been saved successfully.');
+        return back()->with('success', 'The listening skill answer has been saved successfully.');
     }
     
     public function saveSpeaking(Request $request) {
@@ -38,6 +38,7 @@ class StudentSubmissionController extends Controller
     }
     
     public function saveReading(Request $request) {
+        
         $validated = $request->validate([
             'skill_id' => 'required|integer',
             'responses' => 'required|array',
@@ -60,7 +61,31 @@ class StudentSubmissionController extends Controller
     }     
     
     public function saveWriting(Request $request) {
-        // Xử lý lưu dữ liệu Writing
-    }
+        // Log::info('Received data:', $request->all());
+        // Validate the incoming data
+        $validated = $request->validate([
+            'skill_id' => 'required|integer',
+            'responses' => 'required|array',
+            'responses.*' => 'nullable|string',  // Increase the max size if needed
+        ]);
+    
+        // Get the student's ID, assuming they are authenticated
+        $studentId = auth()->id();
+    
+        // Loop through each response and save or update it
+        foreach ($request->responses as $questionId => $responseText) {
+            WritingResponse::updateOrCreate(
+                [
+                    'skill_id' => $request->skill_id,
+                    'student_id' => $studentId,
+                    'question_id' => $questionId
+                ],
+                ['text_response' => $responseText]
+            );
+        }
+    
+        // Optionally, return a response indicating success
+        return response()->json(['message' => 'Writing responses saved successfully']);
+    }    
     
 }

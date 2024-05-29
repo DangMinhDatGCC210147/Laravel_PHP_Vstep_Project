@@ -16,18 +16,18 @@ class SpeakingController extends Controller
         try {
             // Process Part 1
             for ($i = 1; $i <= 2; $i++) {
-                $readingsAudio = new ReadingsAudio([
-                    'test_skill_id' => $skill_id,
-                    'reading_audio_file' => $request->input("part1_question_$i"),
-                    'part_name' => 'Part_1',
-                ]);
-                $readingsAudio->save();
+                // $readingsAudio = new ReadingsAudio([
+                //     'test_skill_id' => $skill_id,
+                //     'reading_audio_file' => null,
+                //     'part_name' => 'Part_1',
+                // ]);
+                // $readingsAudio->save();
 
                 $questionText = $request->input("part1_question_$i");
 
                 $question = new Question([
                     'test_skill_id' => $skill_id,
-                    'reading_audio_id' => $readingsAudio->id,
+                    // 'reading_audio_id' => $readingsAudio->id,
                     'question_text' => $questionText,
                     'question_type' => 'Text Speaking',
                     'question_number' => $i,
@@ -46,17 +46,17 @@ class SpeakingController extends Controller
             }
 
             // Process Part 2
-            $readingsAudio2 = new ReadingsAudio([
-                'test_skill_id' => $skill_id,
-                'reading_audio_file' => $request->input("part2_text"),
-                'part_name' => 'Part_2',
-            ]);
-            $readingsAudio2->save();
+            // $readingsAudio2 = new ReadingsAudio([
+            //     'test_skill_id' => $skill_id,
+            //     'reading_audio_file' => $request->input("part2_text"),
+            //     'part_name' => 'Part_2',
+            // ]);
+            // $readingsAudio2->save();
 
             $part2Text = $request->input('part2_text');
             $questionPart2 = new Question([
                 'test_skill_id' => $skill_id,
-                'reading_audio_id' => $readingsAudio2->id,
+                // 'reading_audio_id' => $readingsAudio2->id,
                 'question_text' => $part2Text,
                 'question_type' => 'Text Speaking',
                 'part_name' => 'Part_2',

@@ -35,7 +35,7 @@
                     </div>
                 </div>
                 <div class="m-2">
-                    <div class="row">
+                    <div class="row" id="content-row">
                         <div class="col-md-6 overflow-auto border-style" style="height: 32vw;" id="content-area">
                             @foreach ($test->testSkills as $skill)
                                 @foreach ($skill->readingsAudios as $readingAudio)
@@ -57,7 +57,7 @@
                                 @endforeach
                             @endforeach
                         </div>
-                        <div class="col-md-6 overflow-auto border-style" style="height: 32vw;">
+                        <div class="col-md-6 overflow-auto border-style" style="height: 32vw;" id="form-area">
                             @foreach ($skills as $skill)
                                 <form
                                     @if ($skill->skill_name == 'Listening') action="/saveListening"
@@ -69,24 +69,51 @@
                                         action="/saveWriting" @endif
                                     method="post" id="testForm-{{ $skill->id }}" class="testForm">
                                     @csrf
-                                    @foreach ($skill->questions as $question)
+                                    @foreach ($skill->questions as $index => $question)
                                         <div class="mb-3 question-block skill-{{ $skill->id }}-part-{{ $question->part_name }}"
                                             style="display: none;">
                                             <strong>
                                                 <p>Question {{ $question->question_number }}: {{ $question->question_text }}
                                                 </p>
                                             </strong>
-                                            @foreach ($question->options as $index => $option)
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio"
-                                                        name="responses[{{ $question->id }}]"
-                                                        id="option_{{ $option->id }}"
-                                                        value="{{ $option->option_text }}">
-                                                    <label class="form-check-label" for="option_{{ $option->id }}">
-                                                        {{ chr(65 + $index) }}. {{ $option->option_text }}
-                                                    </label>
+                                            @if ($skill->skill_name == 'Writing')
+                                                <!-- Textarea for Writing responses -->
+                                                <div class="showCount d-flex justify-content-end">
+                                                    <strong>
+                                                        <div id="wordCount_{{ $question->id }}" class="countWord">0 words
+                                                        </div>
+                                                    </strong>
                                                 </div>
-                                            @endforeach
+                                                <textarea name="responses[{{ $question->id }}]" id="response_{{ $question->id }}" class="form-control" rows="19"
+                                                    placeholder="Type your response here..."></textarea>
+                                            @elseif($skill->skill_name == 'Speaking')
+                                                @foreach ($question->options as $index => $option)
+                                                    <div class="form-check">
+                                                        <label class="form-check-label" for="option_{{ $option->id }}">
+                                                            {{ $index + 1 }}. {{ $option->option_text }}
+                                                        </label>
+                                                    </div>
+                                                @endforeach
+                                                <div class="audio-response d-flex pt-3 pb-3">
+                                                    <button id="recordButton" class="btn btn-info">Start
+                                                        Recording</button>
+                                                    <button id="stopButton" class="btn btn-warning" disabled>Stop
+                                                        Recording</button>
+                                                    <audio id="audio" controls></audio>
+                                                </div>
+                                            @else
+                                                @foreach ($question->options as $index => $option)
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio"
+                                                            name="responses[{{ $question->id }}]"
+                                                            id="option_{{ $option->id }}"
+                                                            value="{{ $option->option_text }}">
+                                                        <label class="form-check-label" for="option_{{ $option->id }}">
+                                                            {{ chr(65 + $index) }}. {{ $option->option_text }}
+                                                        </label>
+                                                    </div>
+                                                @endforeach
+                                            @endif
                                         </div>
                                     @endforeach
                                     <input type="hidden" name="skill_id" value="{{ $skill->id }}">
@@ -139,7 +166,6 @@
     <!-- End Footer -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
-
         var audioElements;
         var skillIds = @json($skillIds);
         var currentSkillIndex = 0; // Chỉ số của kỹ năng hiện tại
@@ -150,6 +176,49 @@
         var countdownTimer;
         var timeRemaining;
         var currentSkillTimeLimit;
+    </script>
+    <script>
+        let mediaRecorder;
+        let chunks = [];
+        const recordButton = document.getElementById('recordButton');
+        const stopButton = document.getElementById('stopButton');
+        const audio = document.getElementById('audio');
+
+        recordButton.addEventListener('click', startRecording);
+        stopButton.addEventListener('click', stopRecording);
+
+        function startRecording() {
+            navigator.mediaDevices.getUserMedia({
+                    audio: true
+                })
+                .then(function(stream) {
+                    mediaRecorder = new MediaRecorder(stream);
+                    mediaRecorder.ondataavailable = function(e) {
+                        chunks.push(e.data);
+                    };
+                    mediaRecorder.onstop = function(e) {
+                        const blob = new Blob(chunks, {
+                            'type': 'audio/ogg; codecs=opus'
+                        });
+                        chunks = [];
+                        const audioURL = URL.createObjectURL(blob);
+                        audio.src = audioURL;
+                    };
+                    mediaRecorder.start();
+                })
+                .catch(function(err) {
+                    console.error('Error accessing microphone', err);
+                });
+
+            recordButton.disabled = true;
+            stopButton.disabled = false;
+        }
+
+        function stopRecording() {
+            mediaRecorder.stop();
+            recordButton.disabled = false;
+            stopButton.disabled = true;
+        }
     </script>
     <script src="{{ asset('students/assets/js/test_page.js') }}"></script>
 @endsection

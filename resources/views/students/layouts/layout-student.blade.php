@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
     <meta content="DangMinhDat" name="author" />
+    {{-- <meta http-equiv="Content-Security-Policy" content="script-src 'self';"> --}}
     {{-- <meta http-equiv="refresh" content="2"> --}}
     <!-- App favicon -->
     <link rel="shortcut icon" href="{{ asset('students\assets\images\logo-white.png') }}">

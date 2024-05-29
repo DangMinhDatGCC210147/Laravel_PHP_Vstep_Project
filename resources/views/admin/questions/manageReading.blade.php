@@ -144,7 +144,7 @@
                         action="{{ route('reading.questions.update', ['test_slug' => $test_slug, 'skill_slug' => $skill_slug]) }}"
                         method="POST">
                         @csrf
-                        @method('PUT')
+                            @method('PUT')
                         @foreach ($passages as $partIndex => $part)
                             <div class="mb-4">
                                 <div class="passage d-flex justify-content-center">
@@ -170,7 +170,7 @@
                                                             name="questions[{{ $part->id }}][{{ $question->id }}][correct_answer]"
                                                             value="{{ $option->id }}"
                                                             id="defaultCheck{{ $loop->parent->iteration + $partIndex * 10 }}-{{ $option->id }}"
-                                                            {{ $question->correct_answer == $option->option_text ? 'checked' : '' }}>
+                                                            {{ $option->correct_answer == 1 ? 'checked' : '' }}>
                                                         {{-- <label class="form-check-label"
                                                             for="defaultCheck{{ $loop->parent->iteration + $partIndex * 10 }}-{{ $option->id }}">
                                                             Option {{ $loop->iteration }} --}}

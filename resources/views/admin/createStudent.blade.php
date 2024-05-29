@@ -58,9 +58,10 @@
                                         <div class="col-md-10">
                                             <input type="text" id="example-email" class="form-control"
                                                 placeholder="Student ID" name="student_id"
-                                                value="{{ isset($user) ? $user->student_id : '' }}">
+                                                value="{{ isset($user) ? $user->account_id : '' }}">
                                         </div>
                                     </div>
+                                    <input type="hidden" name="role" value="2">
                                     @if (!isset($user))
                                         <div class="mb-2 row">
                                             <label class="col-md-2 col-form-label" for="example-password">Password</label>

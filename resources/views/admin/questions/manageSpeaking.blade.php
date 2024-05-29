@@ -102,7 +102,7 @@
                 @csrf
                 @method('PUT')
 
-                @foreach ($questions->where('part_name', 'Part 1') as $index => $question)
+                @foreach ($questions->where('part_name', 'Part_1') as $index => $question)
                     <div class="card mb-3">
                         <div class="card-header">
                             <h3>Part 1 - Question {{ $index + 1 }}</h3>
@@ -114,7 +114,7 @@
                                     value="{{ $question->question_text }}" required>
                                 @foreach ($question->options as $j => $option)
                                     <div class="mb-1 d-flex mt-4">
-                                        <div class="col-md-1"><label class="form-label">Option {{ $j + 1 }}:</label>
+                                        <div class="col-md-1"><label class="form-label">Question {{ $j + 1 }}:</label>
                                         </div>
                                         <div class="col-md-11">
                                             <input type="text"
@@ -127,8 +127,6 @@
                         </div>
                     </div>
                 @endforeach
-
-
                 <div class="card mb-3">
                     <div class="card-header">
                         <h3>Part 2</h3>
@@ -150,7 +148,7 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Current Image</label>
-                            <div class="d-flex justify-content-center mb-5"><img src="{{ asset('storage/' . $passages[3]->reading_audio_file) }}" alt="Uploaded Image"
+                            <div class="d-flex justify-content-center mb-5"><img src="{{ asset('storage/' . $passages[0]->reading_audio_file) }}" alt="Uploaded Image"
                                     style="max-height: 200px;"></div>
                             <label class="form-label">Change file</label>
                             <input type="file" name="part3_image" class="form-control" accept="image/*">

@@ -13,15 +13,6 @@ use Illuminate\Support\Facades\DB;
 
 class ReadingController extends Controller
 {
-    // public function readingDetail(Test $test_slug, TestSkill $skill_slug)
-    // {
-    //     // dd($skill_slug, $test_slug);
-    //     $test = Test::findOrFail($test_slug->id);
-    //     $skill = $test->testSkills()->where('slug', $skill_slug->slug)->firstOrFail();
-    //     $passages = null;
-    //     // Nếu không có dữ liệu, $passages sẽ là một collection rỗng
-    //     return view('admin.questions.manageReading', compact('test', 'skill', 'test_slug', 'passages'));
-    // }
 
     public function storeReading(Request $request, Test $test_slug, $skill_id)
     {
@@ -44,15 +35,17 @@ class ReadingController extends Controller
                     $question->part_name = 'Part_' . ceil($question->question_number / 10);
                     $question->question_text = $questionData['text'];
                     $question->question_type = 'Multiple Choice Reading'; // Assuming all are multiple choice
-                    $question->correct_answer = $questionData['options'][$questionData['correct_answer']];
+                    // $question->correct_answer = $questionData['options'][$questionData['correct_answer']];
                     $question->save();
-
                     // Save options for the question
                     foreach ($questionData['options'] as $index => $optionText) {
                         $option = new Option;
                         $option->question_id = $question->id;
                         $option->option_text = $optionText;
+                        $option->correct_answer = ($index == $questionData['correct_answer']);
+
                         $option->save();
+                        
                     }
                 }
             }
@@ -77,10 +70,9 @@ class ReadingController extends Controller
                 // Cập nhật các câu hỏi cho mỗi đoạn đọc
                 if (isset($request->questions[$readingAudioId])) {
                     foreach ($request->questions[$readingAudioId] as $questionData) {
-                        // dd($request->questions[$readingAudioId], $questionData);
                         $question = Question::findOrFail($questionData['id']);
                         $question->question_text = $questionData['text'];
-                        $question->correct_answer = $questionData['options'][$questionData['correct_answer']];
+                        // $question->correct_answer = $questionData['options'][$questionData['correct_answer']];
                         $question->save();
 
                         // Cập nhật các lựa chọn cho câu hỏi
@@ -88,6 +80,7 @@ class ReadingController extends Controller
                             foreach ($questionData['options'] as $optionId => $optionText) {
                                 $option = Option::findOrFail($optionId);
                                 $option->option_text = $optionText;
+                                $option->correct_answer = ($optionId == $questionData['correct_answer']);
                                 $option->save();
                             }
                         }

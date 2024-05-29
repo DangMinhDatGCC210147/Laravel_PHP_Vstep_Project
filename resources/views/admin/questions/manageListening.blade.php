@@ -175,7 +175,7 @@
                                                         name="questions[{{ $question->id }}][correct_answer]"
                                                         value="{{ $option->id }}"
                                                         id="defaultCheck{{ $question->id }}-{{ $option->id }}"
-                                                        {{ $question->correct_answer == $option->option_text ? 'checked' : '' }}>
+                                                        {{ $option->correct_answer == 1 ? 'checked' : '' }}>
                                                     {{-- <label class="form-check-label"
                                                         for="defaultCheck{{ $question->id }}-{{ $option->id }}">
                                                         Option {{ $option->option_number }}

@@ -59,11 +59,19 @@ $(document).ready(function () {
         // Scroll to the top of the container
         $('#content-area').scrollTop(0);
         $('.testForm').closest('.col-md-6').scrollTop(0);
+
     }
 
     function updateAnsweredCount(skillPart) {
         var answered = 0;
         var total = $('[class*="' + skillPart + '"].question-block').length;
+
+        $('[class*="' + skillPart + '"].question-block textarea').each(function () {
+            if ($(this).val().trim() !== '') {
+                answered++;
+            }
+        });
+
         $('[class*="' + skillPart + '"].question-block').each(function () {
             if ($(this).find('input[type=radio]:checked').length > 0) {
                 answered++;
@@ -93,6 +101,7 @@ $(document).ready(function () {
                     currentSkillIndex = skillIds.length - 1; // Ensure we don't go out of bounds
                 }
                 updateSkillButtons();
+                adjustLayoutForWriting();
                 var nextSkillId = skillIds[currentSkillIndex];
                 var nextSkillPart = 'skill-' + nextSkillId + '-part-Part_1';
                 var nextTimeLimit = $('[data-skill-id="' + nextSkillId + '"]').data('time-limit');
@@ -151,16 +160,64 @@ $(document).ready(function () {
                     currentSkillIndex = skillIds.length - 1; // Ensure we don't go out of bounds
                 }
                 updateSkillButtons();
+
                 var nextSkillId = skillIds[currentSkillIndex];
                 var nextSkillPart = 'skill-' + nextSkillId + '-part-Part_1';
                 var nextTimeLimit = $('[data-skill-id="' + nextSkillId + '"]').data('time-limit');
                 currentSkillTimeLimit = convertTimeLimitToSeconds(nextTimeLimit); // Cập nhật thời gian giới hạn cho kỹ năng tiếp theo
                 startCountdown(currentSkillTimeLimit);
                 showSkillPart(nextSkillPart, nextSkillId);
+
+
+                var formElement = $('#testForm-' + nextSkillId);
+                if (formElement.length === 0) {
+                    return;
+                }
+                var nextSkillName = formElement.attr('action');
+                if (nextSkillName && nextSkillName.includes('Writing')) {
+                    adjustLayoutForWriting();
+                }
+
+                if (nextSkillName && nextSkillName.includes('Speaking')) {
+                    adjustLayoutForSpeaking();
+                }
             }
         });
     });
+    function adjustLayoutForWriting() {
+        var currentSkill = skillIds[currentSkillIndex];
+        var currentSkillName = $('.skill-' + currentSkill + '-part-Part_1').closest('form').attr('action');
 
+        if (currentSkillName.includes('Writing')) {
+            $('#content-area, #form-area').removeClass('col-md-6').addClass('col-md-12'); // Expand to full width
+            $('#content-area').css('height', '3vw');
+        } else {
+            $('#content-area, #form-area').removeClass('col-md-12').addClass('col-md-6'); // Reset to half width
+            $('#content-area').css('height', '32vw');
+        }
+    }
+    
+    function adjustLayoutForSpeaking() {
+        var currentSkill = skillIds[currentSkillIndex];
+        var currentSkillName = $('.skill-' + currentSkill + '-part-Part_1').closest('form').attr('action');
+
+        if (currentSkillName.includes('Speaking')) {
+            $('#content-area, #form-area').removeClass('col-md-12').addClass('col-md-6'); // Expand to full width
+            $('#content-area').css('height', '32vw');
+        }
+    }
+    // Call the function on page load
+    adjustLayoutForWriting();
+    adjustLayoutForSpeaking()
+
+    // Call the function when switching skills
+    $('.skill-part-btn').click(function () {
+        adjustLayoutForWriting();
+    });
+
+    $('#next-skill-btn').click(function () {
+        adjustLayoutForWriting();
+    });
     // $('#submitTestButton').click(function () {
     //     $('#testForm').submit();
     // });
@@ -179,6 +236,26 @@ $(document).ready(function () {
 
         updateAnsweredCount(skillPart);
     });
+    //Count the number of question answered
+    $('textarea').on('input', function () {
+        var skillPart = $(this).closest('.question-block').attr('class').split(' ').find(cls => cls.startsWith('skill-'));
+        var questionId = $(this).attr('id'); // Assuming the id of the textarea serves as a unique question identifier
+
+        // Check if there's any content in the textarea (considered answered if not empty)
+        if ($(this).val().trim() !== '' && !partAnswered[skillPart][questionId]) {
+            partAnswered[skillPart][questionId] = true; // Mark this question as answered
+            if (!answeredCount[skillPart]) {
+                answeredCount[skillPart] = 0;
+            }
+            answeredCount[skillPart]++; // Increment the count for this part
+        } else if ($(this).val().trim() === '' && partAnswered[skillPart][questionId]) {
+            partAnswered[skillPart][questionId] = false; // Mark as unanswered
+            answeredCount[skillPart]--; // Decrement the count if text is removed
+        }
+
+        // Update the displayed count for this part
+        updateAnsweredCount(skillPart);
+    });
 
     $('#reset-btn').click(function () {
         // Clear localStorage
@@ -186,6 +263,76 @@ $(document).ready(function () {
         // Reload the page to reset everything
         location.reload();
     });
+
+    // Restore radio button selections
+    $('input[type="radio"]').each(function () {
+        var questionId = $(this).attr('name');
+        var savedValue = localStorage.getItem(questionId);
+
+        if (savedValue && $(this).val() === savedValue) {
+            $(this).prop('checked', true);
+        }
+    });
+    //Textarea
+    // Restore textarea content from localStorage on page load
+    $('textarea').each(function () {
+        var questionId = $(this).attr('id');
+        var savedContent = localStorage.getItem(questionId);
+        if (savedContent !== null) {
+            $(this).val(savedContent);
+        }
+    });
+
+    // Save textarea content to localStorage on input change
+    $('textarea').on('input', function () {
+        var questionId = $(this).attr('id');
+        var content = $(this).val();
+        localStorage.setItem(questionId, content);
+    });
+
+    // Listen for changes on any radio button
+    $('input[type="radio"]').change(function () {
+        var questionId = $(this).attr('name');
+        var selectedValue = $(this).val();
+
+        // Save the selection to localStorage
+        localStorage.setItem(questionId, selectedValue);
+    });
+
+    // Function to count words in a string
+    function countWords(str) {
+        return str.trim().split(/\s+/).filter(function (word) {
+            return word.length > 0;
+        }).length;
+    }
+
+    // Event listener for all textareas
+    $('textarea').each(function () {
+        var textareaId = $(this).attr('id');
+        var wordCountId = 'wordCount_' + textareaId.split('_')[1];
+        var savedContent = localStorage.getItem('content_' + textareaId);
+        var savedWordCount = localStorage.getItem('wordCount_' + textareaId);
+
+        if (savedContent !== null) {
+            $(this).val(savedContent);
+            $('#' + wordCountId).text(savedWordCount + ' words');
+        }
+    });
+
+    // Event listener for all textareas
+    $('textarea').on('input', function () {
+        var textareaId = $(this).attr('id');
+        var wordCountId = 'wordCount_' + textareaId.split('_')[1];
+        var content = $(this).val();
+        var words = countWords(content);
+
+        // Update the word count display
+        $('#' + wordCountId).text(words + ' words');
+        // Save the content and word count to localStorage
+        localStorage.setItem('content_' + textareaId, content);
+        localStorage.setItem('wordCount_' + textareaId, words);
+    });
+
 });
 
 // Ngăn chặn các tổ hợp phím phổ biến mở Developer Tools
@@ -204,6 +351,12 @@ $(document).ready(function () {
 //         event.preventDefault();
 //     }
 // });
+//Not allow to hightlight
+document.addEventListener('selectstart', function (e) {
+    if (e.target.classList.contains('body')) {
+        e.preventDefault(); // Ngăn chặn việc chọn văn bản cho các phần tử có class 'no-select'
+    }
+});
 
 // Ngăn chặn chuột phải
 document.addEventListener('contextmenu', function (event) {
@@ -280,8 +433,8 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-$(document).ready(function() {
-    $('#save-btn').click(function(e) {
+$(document).ready(function () {
+    $('#save-btn').click(function (e) {
         e.preventDefault(); // Prevent default form submission
 
         var totalForms = $('.testForm').length; // Total number of forms
@@ -289,7 +442,7 @@ $(document).ready(function() {
         var popupShown = false; // Flag to check if popup is shown
 
         // Iterate through each form and send it via AJAX
-        $('.testForm').each(function() {
+        $('.testForm').each(function () {
             var form = $(this);
             var actionUrl = form.attr('action'); // Get action from form attribute
 
@@ -297,10 +450,10 @@ $(document).ready(function() {
                 url: actionUrl,
                 type: 'POST',
                 data: form.serialize(), // Serialize form data
-                success: function(response) {
+                success: function (response) {
                     console.log('Data saved for form with action: ' + actionUrl);
                     completedForms++; // Increment counter on success
-                    if ((completedForms === totalForms-1) && !popupShown) { // Check if all forms are submitted and popup not shown
+                    if ((completedForms === totalForms - 1) && !popupShown || completedForms == 1) { // Check if all forms are submitted and popup not shown
                         popupShown = true; // Set the flag to true
                         Swal.fire({ // Use Swal.fire() to create a SweetAlert2 popup
                             title: 'Success!',
@@ -311,7 +464,7 @@ $(document).ready(function() {
                         });
                     }
                 },
-                error: function(xhr, status, error) {
+                error: function (xhr, status, error) {
                     console.error('Error saving data for form with action: ' + actionUrl);
                 }
             });

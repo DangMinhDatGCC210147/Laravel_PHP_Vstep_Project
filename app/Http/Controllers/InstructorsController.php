@@ -14,18 +14,18 @@ class InstructorsController extends Controller
     public function index()
     {
         // $lecturers = User::all();
-        $lecturers = User::whereNotNull('lecturer_id')
-                            ->orderBy('id', 'asc')
-                            ->get();
+        $lecturers = User::where('role', 1)
+            ->orderBy('id', 'asc')
+            ->get();
         return view('admin.tableLecturer', compact('lecturers'));
     }
 
     public function indexStudent()
     {
         // $lecturers = User::all();
-        $students = User::whereNotNull('student_id')
-                            ->orderBy('id', 'asc')
-                            ->get();
+        $students = User::where('role', 2)
+            ->orderBy('id', 'asc')
+            ->get();
         return view('admin.tableStudent', compact('students'));
     }
     /**
@@ -85,18 +85,18 @@ class InstructorsController extends Controller
         $user->lecturer_id = $request->lecturer_id;
         $user->student_id = $request->student_id;
 
-        if($user->lecturer_id != null){
+        if ($user->lecturer_id != null) {
             $user->role = '1';
-        }else{
+        } else {
             $user->role = '2';
         }
         // Save the updated user
         $user->save();
 
         // Redirect back with a success message
-        if($user->lecturer_id != null){
+        if ($user->lecturer_id != null) {
             return redirect()->route('tableLecturer.index')->with('success', 'Lecturer updated successfully');
-        }else{
+        } else {
             return redirect()->route('tableStudent.index')->with('success', 'Student updated successfully');
         }
     }

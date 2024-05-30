@@ -11,7 +11,7 @@ class Test extends Model
     use HasFactory;
     use Sluggable;
 
-    protected $fillable = ['test_code', 'test_name', 'duration', 'instructor_id', 'test_type', 'start_date', 'end_date'];
+    protected $fillable = ['test_code', 'test_name', 'duration', 'instructor_id', 'test_status', 'start_date', 'end_date'];
 
     public function sluggable(): array
     {

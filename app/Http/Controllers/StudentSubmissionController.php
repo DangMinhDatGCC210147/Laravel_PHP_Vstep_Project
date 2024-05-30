@@ -34,7 +34,7 @@ class StudentSubmissionController extends Controller
     }
     
     public function saveSpeaking(Request $request) {
-        // Xử lý lưu dữ liệu Speaking
+        
     }
     
     public function saveReading(Request $request) {

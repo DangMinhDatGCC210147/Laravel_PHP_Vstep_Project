@@ -24,8 +24,11 @@
                     </div>
                     <div class="col-md-3 text-center">
                         <h2>Timer:
-                            <span class="badge bg-primary" id="skill-timer">
-                                47:00
+                            <span class="badge bg-primary" id="skill-timer" style="display: inline;">
+                                00:00
+                            </span>
+                            <span class="badge bg-primary" id="speaking-skill-timer" style="display: none;">
+                                00:00
                             </span>
                         </h2>
                     </div>
@@ -41,6 +44,20 @@
                                 @foreach ($skill->readingsAudios as $readingAudio)
                                     <div class="mb-3 content-block skill-{{ $skill->id }}-part-{{ $readingAudio->part_name }}"
                                         style="display: none;">
+                                        @if ($skill->skill_name == 'Writing')
+                                            @php
+                                                $questionForPart = $skill->questions->firstWhere(
+                                                    'part_name',
+                                                    $readingAudio->part_name,
+                                                );
+                                            @endphp
+                                            @if ($questionForPart)
+                                                <strong>
+                                                    <p>Question {{ $questionForPart->question_number }}:
+                                                        {{ $questionForPart->question_text }}</p>
+                                                </strong>
+                                            @endif
+                                        @endif
                                         @if ($readingAudio->isAudio())
                                             <audio controls controlsList="nodownload" id="audioPlayer">
                                                 <source src="{{ asset('storage/' . $readingAudio->reading_audio_file) }}"
@@ -56,60 +73,78 @@
                                     </div>
                                 @endforeach
                             @endforeach
+                            <div class="card notification text-bg-danger mb-3" id="notification"
+                                style="display: none; max-width: 20rem;">
+                                <div class="card-header">
+                                    CHÚ Ý:
+                                </div>
+                                <div class="card-body">
+                                    <blockquote class="blockquote mb-0">
+                                        <h5>BÀI NÓI ĐANG ĐƯỢC THU ÂM TRỰC TIẾP, TRONG QUÁ TRÌNH THU ÂM KHÔNG ĐƯỢC
+                                            TƯƠNG TÁC VỚI HỆ THỐNG</h5>
+                                    </blockquote>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-md-6 overflow-auto border-style" style="height: 32vw;" id="form-area">
+                        <div class="col-md-6 overflow-auto border-style" style="height: 30vw;" id="form-area">
                             @foreach ($skills as $skill)
                                 <form
                                     @if ($skill->skill_name == 'Listening') action="/saveListening"
-                                    @elseif($skill->skill_name == 'Speaking')
-                                        action="/saveSpeaking"
-                                    @elseif($skill->skill_name == 'Reading')
-                                        action="/saveReading"
-                                    @elseif($skill->skill_name == 'Writing')
-                                        action="/saveWriting" @endif
+                                    @elseif ($skill->skill_name == 'Speaking') action="/saveSpeaking"
+                                    @elseif ($skill->skill_name == 'Reading') action="/saveReading"
+                                    @elseif ($skill->skill_name == 'Writing') action="/saveWriting" @endif
                                     method="post" id="testForm-{{ $skill->id }}" class="testForm">
                                     @csrf
+                                    @php
+                                        $recordedParts = []; // Initialize outside the inner foreach loop
+                                    @endphp
                                     @foreach ($skill->questions as $index => $question)
                                         <div class="mb-3 question-block skill-{{ $skill->id }}-part-{{ $question->part_name }}"
                                             style="display: none;">
-                                            <strong>
-                                                <p>Question {{ $question->question_number }}: {{ $question->question_text }}
-                                                </p>
-                                            </strong>
+                                            @if ($skill->skill_name != 'Writing')
+                                                <strong>
+                                                    <p>Question {{ $question->question_number }}:
+                                                        {{ $question->question_text }}</p>
+                                                </strong>
+                                            @endif
+
                                             @if ($skill->skill_name == 'Writing')
-                                                <!-- Textarea for Writing responses -->
                                                 <div class="showCount d-flex justify-content-end">
                                                     <strong>
                                                         <div id="wordCount_{{ $question->id }}" class="countWord">0 words
                                                         </div>
                                                     </strong>
                                                 </div>
-                                                <textarea name="responses[{{ $question->id }}]" id="response_{{ $question->id }}" class="form-control" rows="19"
+                                                <textarea name="responses[{{ $question->id }}]" id="response_{{ $question->id }}" class="form-control" rows="17"
                                                     placeholder="Type your response here..."></textarea>
-                                            @elseif($skill->skill_name == 'Speaking')
-                                                @foreach ($question->options as $index => $option)
+                                            @elseif ($skill->skill_name == 'Speaking')
+                                                @foreach ($question->options as $optionIndex => $option)
                                                     <div class="form-check">
                                                         <label class="form-check-label" for="option_{{ $option->id }}">
-                                                            {{ $index + 1 }}. {{ $option->option_text }}
+                                                            {{ $optionIndex + 1 }}. {{ $option->option_text }}
                                                         </label>
                                                     </div>
                                                 @endforeach
-                                                <div class="audio-response d-flex pt-3 pb-3">
-                                                    <button id="recordButton" class="btn btn-info">Start
+                                                @if ($index == 1 && !in_array($question->part_name, $recordedParts))
+                                                    @php
+                                                        $recordedParts[] = $question->part_name;
+                                                    @endphp
+                                                    <button type="button" onclick="startRecording(this);"
+                                                        data-part-id="{{ $question->part_name }}">Start Recording</button>
+                                                    <button type="button" onclick="stopRecording(this);"
+                                                        data-part-id="{{ $question->part_name }}" disabled>Stop
                                                         Recording</button>
-                                                    <button id="stopButton" class="btn btn-warning" disabled>Stop
-                                                        Recording</button>
-                                                    <audio id="audio" controls></audio>
-                                                </div>
+                                                    <audio id="audio_{{ $question->part_name }}" controls></audio>
+                                                @endif
                                             @else
-                                                @foreach ($question->options as $index => $option)
+                                                @foreach ($question->options as $optionIndex => $option)
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="radio"
                                                             name="responses[{{ $question->id }}]"
                                                             id="option_{{ $option->id }}"
                                                             value="{{ $option->option_text }}">
                                                         <label class="form-check-label" for="option_{{ $option->id }}">
-                                                            {{ chr(65 + $index) }}. {{ $option->option_text }}
+                                                            {{ chr(65 + $optionIndex) }}. {{ $option->option_text }}
                                                         </label>
                                                     </div>
                                                 @endforeach
@@ -125,6 +160,38 @@
             </div>
         </div>
     </div>
+    {{-- Model for PopUp --}}
+    <!-- Bootstrap Modal for Speaking Preparation -->
+    <div class="modal fade" id="speakingPrepModal" tabindex="-1" role="dialog" aria-labelledby="speakingPrepModalLabel"
+        data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="speakingPrepModalLabel">Chuẩn bị cho phần Speaking</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="bound d-flex justify-content-center">
+                        <div class="image-avatar d-flex justify-content-center">
+                            <img src="{{ asset('students/assets/images/boy.png') }}" alt="Boy with headphone">
+                        </div>
+                    </div>
+                    <div class="caution">
+                        <h3>BẠN ĐEO TAI NGHE ĐỂ LÀM BÀI THI NÓI</h3>
+                    </div>
+                    <div class="caution">
+                        <h5>Bạn có 60 giây để chuẩn bị</h5>
+                    </div>
+                    <h4 id="prepTimer">60</h4>
+                    <div class="note">
+                        <h5>BẠN SẼ ĐƯỢC THU ÂM TRỰC TIẾP</h5>
+                    </div>
+                    <div class="note">
+                        <h5>TRONG LÚC THU ÂM KHÔNG TƯƠNG TÁC VỚI HỆ THỐNG</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- Footer Start -->
     <footer class="footer">
         @foreach ($skills as $skill)
@@ -132,17 +199,20 @@
                 <div class="btn-group">
                     @php
                         $usedParts = [];
+                        $buttonIndex = 0;
                     @endphp
                     @foreach ($skill->questions as $part)
                         <!-- Assuming each skill has parts -->
                         @if (!in_array($part->part_name, $usedParts))
                             <button class="btn btn-secondary btn-sm skill-part-btn"
                                 data-skill-part="skill-{{ $skill->id }}-part-{{ $part->part_name }}"
+                                data-part-index="{{ $buttonIndex }}"
                                 data-time-limit="{{ $skill->time_limit }}" data-skill-id="{{ $skill->id }}">
                                 {{ str_replace('_', ' ', $part->part_name) }}
                             </button>
                             @php
                                 $usedParts[] = $part->part_name;
+                                $buttonIndex++; 
                             @endphp
                         @endif
                     @endforeach
@@ -176,49 +246,13 @@
         var countdownTimer;
         var timeRemaining;
         var currentSkillTimeLimit;
-    </script>
-    <script>
-        let mediaRecorder;
-        let chunks = [];
-        const recordButton = document.getElementById('recordButton');
-        const stopButton = document.getElementById('stopButton');
-        const audio = document.getElementById('audio');
 
-        recordButton.addEventListener('click', startRecording);
-        stopButton.addEventListener('click', stopRecording);
-
-        function startRecording() {
-            navigator.mediaDevices.getUserMedia({
-                    audio: true
-                })
-                .then(function(stream) {
-                    mediaRecorder = new MediaRecorder(stream);
-                    mediaRecorder.ondataavailable = function(e) {
-                        chunks.push(e.data);
-                    };
-                    mediaRecorder.onstop = function(e) {
-                        const blob = new Blob(chunks, {
-                            'type': 'audio/ogg; codecs=opus'
-                        });
-                        chunks = [];
-                        const audioURL = URL.createObjectURL(blob);
-                        audio.src = audioURL;
-                    };
-                    mediaRecorder.start();
-                })
-                .catch(function(err) {
-                    console.error('Error accessing microphone', err);
-                });
-
-            recordButton.disabled = true;
-            stopButton.disabled = false;
-        }
-
-        function stopRecording() {
-            mediaRecorder.stop();
-            recordButton.disabled = false;
-            stopButton.disabled = true;
-        }
+        @if ($skills->isNotEmpty())
+            window.currentSkillPart =
+                "skill-{{ $skills->first()->id }}-part-{{ $skills->first()->questions->first()->part_name }}";
+            window.currentSkillId = "{{ $skills->first()->id }}";
+        @endif
     </script>
     <script src="{{ asset('students/assets/js/test_page.js') }}"></script>
+    <script src="{{ asset('students/assets/js/record_speaking.js') }}"></script>
 @endsection

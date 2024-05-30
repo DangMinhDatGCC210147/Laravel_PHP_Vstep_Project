@@ -46,7 +46,7 @@
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $lecturer->name }}</td>
                                     <td>{{ $lecturer->email }}</td>
-                                    <td>{{ $lecturer->lecturer_id }}</td>
+                                    <td>{{ $lecturer->account_id }}</td>
                                     <td>
                                         <a href="{{ route('createInstructor.edit', $lecturer->slug) }}"><i
                                                 class="mdi mdi-lead-pencil mdi-24px"></i></a>

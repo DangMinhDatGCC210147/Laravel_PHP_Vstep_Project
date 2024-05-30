@@ -38,23 +38,10 @@ class StudentController extends Controller
             'accountId' => 'required',
         ]);
 
-        $test = Test::where('test_type', 'trialTest')->inRandomOrder()->first();
+        $test = Test::where('test_status', 'Active')->inRandomOrder()->first();
         $path = $request->file('image')->store('students', 'public');
         $url = Storage::url($path);
 
-        // $student = Student::where('user_id', $request->accountId)->first();
-        // if ($student) {
-        //     // Nếu Student đã tồn tại, cập nhật chỉ định trường cần thiết
-        //     $student->image_file = $url; // Cập nhật chỉ đường dẫn hình ảnh
-        //     $student->save();
-        // } else {
-        //     // Nếu chưa tồn tại, tạo mới và thiết lập cả test_id
-        //     $student = Student::create([
-        //         'user_id' => $request->accountId,
-        //         'image_file' => $url,
-        //         'test_id' => $test->id  // Đặt test_id khi tạo mới
-        //     ]);
-        // }
         // Lưu URL hình ảnh và thông tin người dùng vào database
         $student = Student::updateOrCreate(
             ['user_id' => $request->accountId], // Trường duy nhất để xác định Student

@@ -46,7 +46,7 @@
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $student->name }}</td>
                                     <td>{{ $student->email }}</td>
-                                    <td>{{ $student->student_id }}</td>
+                                    <td>{{ $student->account_id }}</td>
                                     <td>
                                         <a href="{{ route('createStudent.edit', $student->slug) }}"><i
                                                 class="mdi mdi-lead-pencil mdi-24px"></i></a>

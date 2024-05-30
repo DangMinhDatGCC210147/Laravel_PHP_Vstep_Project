@@ -45,7 +45,7 @@ class TestsController extends Controller
             'instructor_id' => 'required|integer',
             // 'start_date' => 'required|date',
             // 'end_date' => 'required|date',
-            'test_type' => 'required|string',
+            'test_status' => 'required|string',
         ]);
         // Check if the test_code already exists
         if (Test::where('test_code', $request->test_code)->exists()) {
@@ -60,12 +60,12 @@ class TestsController extends Controller
         $test->start_date = $request->start_date;
         $test->end_date = $request->end_date;
         $test->instructor_id = $request->instructor_id;
-        $test->test_type = $request->test_type;
+        $test->test_status = $request->test_status;
         $test->save();
 
         // Define the skills data
         $skills = [
-            ['skill_name' => 'Speaking', 'time_limit' => '00:12:00', 'part_count' => 3],
+            ['skill_name' => 'Speaking', 'time_limit' => '00:12:30', 'part_count' => 3],
             ['skill_name' => 'Writing', 'time_limit' => '01:00:00', 'part_count' => 2],
             ['skill_name' => 'Reading', 'time_limit' => '01:00:00', 'part_count' => 4],
             ['skill_name' => 'Listening', 'time_limit' => '00:47:00', 'part_count' => 3],
@@ -122,7 +122,7 @@ class TestsController extends Controller
             // 'start_date' => 'required|date',
             // 'end_date' => 'required|date',
             'instructor_id' => 'required|exists:users,id',
-            'test_type' => 'required|string',
+            'test_status' => 'required|string',
         ]);
 
         // Update the test with validated data
@@ -168,7 +168,6 @@ class TestsController extends Controller
         
         $passages = ReadingsAudio::where('test_skill_id', $skill_slug->id)->get();
         $questions = Question::with('options')->where('test_skill_id', $skill_slug->id)->get();
-        // dd($passages, $questions);
 
         switch ($skill_slug->skill_name) {
             case 'Listening':

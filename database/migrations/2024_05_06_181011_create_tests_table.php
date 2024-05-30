@@ -21,7 +21,7 @@ return new class extends Migration
                 ->references('id')
                 ->on('users')
                 ->onDelete('cascade');
-            $table->string('test_type');
+            $table->string('test_status');
             $table->date('start_date')->nullable();
             $table->date('end_date')->nullable();
             $table->timestamps();

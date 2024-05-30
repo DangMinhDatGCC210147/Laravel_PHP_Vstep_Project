@@ -35,7 +35,15 @@ $(document).ready(function () {
     function updateTimerDisplay() {
         const minutes = Math.floor(timeRemaining / 60);
         const seconds = timeRemaining % 60;
+        const timerElement = $('#skill-timer');
+        // console.log(timerElement);
         $('#skill-timer').text(`${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`);
+
+        if (timeRemaining <= 300) {
+            timerElement.addClass('flash-red');
+        } else {
+            timerElement.removeClass('flash-red');
+        }
     }
 
     function showSkillPart(skillPart, skillId) {
@@ -100,16 +108,40 @@ $(document).ready(function () {
                 if (currentSkillIndex >= skillIds.length) {
                     currentSkillIndex = skillIds.length - 1; // Ensure we don't go out of bounds
                 }
-                updateSkillButtons();
-                adjustLayoutForWriting();
-                var nextSkillId = skillIds[currentSkillIndex];
-                var nextSkillPart = 'skill-' + nextSkillId + '-part-Part_1';
-                var nextTimeLimit = $('[data-skill-id="' + nextSkillId + '"]').data('time-limit');
-                currentSkillTimeLimit = convertTimeLimitToSeconds(nextTimeLimit); // Cập nhật thời gian giới hạn cho kỹ năng tiếp theo
-                startCountdown(currentSkillTimeLimit);
-                showSkillPart(nextSkillPart, nextSkillId);
+                var formElement = $('#testForm-' + nextSkillId);
+                if (formElement.length === 0) {
+                    return;
+                }
+                var nextSkillName = formElement.attr('action');
+                if (nextSkillName && nextSkillName.includes('Listening')) {
+                    updateSkillButtons();
+                    adjustLayoutForListening();
+                    updateButtonToNextSkill();
+                }
+                if (nextSkillName && nextSkillName.includes('Reading')) {
+                    updateSkillButtons();
+                    adjustLayoutForReading();
+                    updateButtonToNextSkill();
+                }
+                if (nextSkillName && nextSkillName.includes('Writing')) {
+                    updateSkillButtons();
+                    adjustLayoutForWriting();
+                    updateButtonToNextSkill();
+                }
+                if (nextSkillName && nextSkillName.includes('Speaking')) {
+                    waitingLayoutForSpeaking();
+                }
             }
         });
+    }
+
+    function updateButtonToNextSkill() {
+        var nextSkillId = skillIds[currentSkillIndex];
+        var nextSkillPart = 'skill-' + nextSkillId + '-part-Part_1';
+        var nextTimeLimit = $('[data-skill-id="' + nextSkillId + '"]').data('time-limit');
+        currentSkillTimeLimit = convertTimeLimitToSeconds(nextTimeLimit);
+        startCountdown(currentSkillTimeLimit);
+        showSkillPart(nextSkillPart, nextSkillId);
     }
 
     // Get the saved skill part from localStorage or default to the initial skill part
@@ -133,8 +165,6 @@ $(document).ready(function () {
     currentSkillTimeLimit = timeRemaining; // Lưu thời gian giới hạn hiện tại
     startCountdown(timeRemaining); // Bắt đầu đếm ngược với thời gian còn lại hiện tại
     showSkillPart(savedSkillPart, initialSkillId);
-
-    // Update the skill buttons state
     updateSkillButtons();
 
     $('.skill-part-btn').click(function () {
@@ -159,65 +189,253 @@ $(document).ready(function () {
                 if (currentSkillIndex >= skillIds.length) {
                     currentSkillIndex = skillIds.length - 1; // Ensure we don't go out of bounds
                 }
-                updateSkillButtons();
 
                 var nextSkillId = skillIds[currentSkillIndex];
-                var nextSkillPart = 'skill-' + nextSkillId + '-part-Part_1';
-                var nextTimeLimit = $('[data-skill-id="' + nextSkillId + '"]').data('time-limit');
-                currentSkillTimeLimit = convertTimeLimitToSeconds(nextTimeLimit); // Cập nhật thời gian giới hạn cho kỹ năng tiếp theo
-                startCountdown(currentSkillTimeLimit);
-                showSkillPart(nextSkillPart, nextSkillId);
-
-
                 var formElement = $('#testForm-' + nextSkillId);
                 if (formElement.length === 0) {
                     return;
                 }
                 var nextSkillName = formElement.attr('action');
                 if (nextSkillName && nextSkillName.includes('Writing')) {
+                    updateButtonToNextSkill()
+                    updateSkillButtons();
                     adjustLayoutForWriting();
                 }
 
                 if (nextSkillName && nextSkillName.includes('Speaking')) {
-                    adjustLayoutForSpeaking();
+                    waitingLayoutForSpeaking();
+                }
+
+                if (nextSkillName && nextSkillName.includes('Listening')) {
+                    updateButtonToNextSkill()
+                    updateSkillButtons();
+                    adjustLayoutForListening();
+                }
+                if (nextSkillName && nextSkillName.includes('Reading')) {
+                    updateButtonToNextSkill()
+                    updateSkillButtons();
+                    adjustLayoutForReading();
                 }
             }
         });
     });
+    
     function adjustLayoutForWriting() {
         var currentSkill = skillIds[currentSkillIndex];
         var currentSkillName = $('.skill-' + currentSkill + '-part-Part_1').closest('form').attr('action');
 
         if (currentSkillName.includes('Writing')) {
             $('#content-area, #form-area').removeClass('col-md-6').addClass('col-md-12'); // Expand to full width
-            $('#content-area').css('height', '3vw');
-        } else {
-            $('#content-area, #form-area').removeClass('col-md-12').addClass('col-md-6'); // Reset to half width
-            $('#content-area').css('height', '32vw');
+            $('#content-area').css('height', '21vw');
+            $('#form-area').css('height', '26vw');
         }
     }
-    
+
     function adjustLayoutForSpeaking() {
         var currentSkill = skillIds[currentSkillIndex];
         var currentSkillName = $('.skill-' + currentSkill + '-part-Part_1').closest('form').attr('action');
 
         if (currentSkillName.includes('Speaking')) {
             $('#content-area, #form-area').removeClass('col-md-12').addClass('col-md-6'); // Expand to full width
-            $('#content-area').css('height', '32vw');
+            $('#content-area').css('height', '34vw');
+            $('#form-area').css('height', '34vw');
         }
     }
-    // Call the function on page load
+
+    function adjustLayoutForListening() {
+        var currentSkill = skillIds[currentSkillIndex];
+        var currentSkillName = $('.skill-' + currentSkill + '-part-Part_1').closest('form').attr('action');
+
+        if (currentSkillName.includes('Listening')) {
+            $('#content-area, #form-area').removeClass('col-md-6').addClass('col-md-12'); // Expand to full width
+            $('#content-area').css('height', '5vw');
+        }
+    }
+
+    function adjustLayoutForReading() {
+        var currentSkill = skillIds[currentSkillIndex];
+        var currentSkillName = $('.skill-' + currentSkill + '-part-Part_1').closest('form').attr('action');
+
+        if (currentSkillName.includes('Reading')) {
+            $('#content-area, #form-area').removeClass('col-md-12').addClass('col-md-6'); // Expand to full width
+            $('#content-area').css('height', '35vw');
+            $('#form-area').css('height', '35vw');
+        }
+    }
+
+    adjustLayoutForListening();
     adjustLayoutForWriting();
-    adjustLayoutForSpeaking()
+    adjustLayoutForReading();
 
     // Call the function when switching skills
     $('.skill-part-btn').click(function () {
         adjustLayoutForWriting();
+        adjustLayoutForListening();
+        adjustLayoutForReading();
     });
 
     $('#next-skill-btn').click(function () {
         adjustLayoutForWriting();
+        adjustLayoutForListening();
+        adjustLayoutForReading();
     });
+
+    function waitingLayoutForSpeaking() {
+        var currentSkill = skillIds[currentSkillIndex];
+        var currentSkillName = $('.skill-' + currentSkill + '-part-Part_1').closest('form').attr('action');
+
+        if (currentSkillName.includes('Speaking')) {
+            $('#speakingPrepModal').modal('show');  // Show the modal
+            let prepTime = 60;  // Set preparation time in seconds
+
+            // Function to update the countdown timer
+            function updateTimer() {
+                if (prepTime > 0) {
+                    prepTime--;
+                    $('#prepTimer').text(prepTime);  // Update the display
+                } else {
+                    clearInterval(timer);  // Stop the timer when it reaches 0
+                    $('#speakingPrepModal').modal('hide');  // Hide the modal
+                }
+            }
+
+            let timer = setInterval(updateTimer, 1000);  // Set interval to update every second
+            $('#speakingPrepModal').on('hidden.bs.modal', function () {
+                updateSkillButtons();
+                updateButtonToNextSkill();
+                adjustLayoutForSpeaking();  
+                    // Initialize first part
+                showSpeakingSkillPart(speakingCurrentPartIndex);
+                var currentSkill = getCurrentSkillName(); 
+                toggleTimerVisibility(currentSkill);
+            });
+        }
+    }
+
+    // =================================================================================================
+    // =================================================================================================
+    // =================================================================================================
+    // =================================================================================================
+    
+    let speakingCountdownTimer, speakingReadingTimer, speakingRecordingTimer;
+    let speakingTimeRemaining, speakingCurrentPartIndex = 0;
+    const speakingPartDetails = [
+        { readingTime: 13, recordingTime: 180 }, // Part 1: 12s reading, 3 min recording
+        { readingTime: 61, recordingTime: 180 }, // Part 2: 1 min reading, 3 min recording
+        { readingTime: 61, recordingTime: 240 }  // Part 3: 1 min reading, 4 min recording
+    ];
+
+    function startSpeakingCountdown(duration, callback) {
+        clearInterval(speakingCountdownTimer);
+        speakingTimeRemaining = duration;
+        speakingCountdownTimer = setInterval(() => {
+            speakingTimeRemaining--;
+            updateSpeakingTimerDisplay();
+            if (speakingTimeRemaining <= 0) {
+                clearInterval(speakingCountdownTimer);
+                callback();
+            }
+        }, 1000);
+    }
+
+    function updateSpeakingTimerDisplay() {
+        let minutes = Math.floor(speakingTimeRemaining / 60);
+        let seconds = speakingTimeRemaining % 60;
+        $('#speaking-skill-timer').text(`${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`);
+    }
+
+    function showSpeakingSkillPart(partIndex) {
+        const partId = `part-${partIndex + 1}`;
+        $('.speaking-question-block').hide(); // Hide all parts
+        $(`.skill-${partId}`).show(); // Show current part
+        prepareSpeakingPart(partIndex);
+    }
+
+    function prepareSpeakingPart(index) {
+        if (index < speakingPartDetails.length) {
+            const part = speakingPartDetails[index];
+            console.log(`Reading time for part ${index + 1}: ${part.readingTime} seconds`);
+            startSpeakingCountdown(part.readingTime, () => startSpeakingRecordingPart(index));
+        }
+    }
+
+    function startSpeakingRecordingPart(index) {
+        const part = speakingPartDetails[index];
+        console.log(`Recording time for part ${index + 1}: ${part.recordingTime} seconds`);
+        startSpeakingCountdown(part.recordingTime, () => endSpeakingRecordingPart(index));
+        // Start recording
+        speakingStartRecording(); // This function should handle the actual media recording
+    }
+
+    function endSpeakingRecordingPart(index) {
+        speakingStopRecording(); // This function should handle stopping the media recording
+        speakingCurrentPartIndex++;
+        if (speakingCurrentPartIndex < speakingPartDetails.length) {
+            showSpeakingSkillPart(speakingCurrentPartIndex);
+        } else {
+            console.log("All speaking parts completed.");
+            // Optionally, auto-submit the form or enable a submit button
+            $('#speaking-submitFormButton').prop('disabled', false);
+        }
+    }
+    function updateButtonToNextSkillSpeaking() {
+        var nextSkillId = skillIds[currentSkillIndex];
+        var nextSkillPart = 'skill-' + nextSkillId + '-part-Part_1';
+        showSkillPart(nextSkillPart, nextSkillId);
+    }
+
+    function speakingStartRecording() {
+        console.log("Recording started...");
+        $('#notification').show();
+        // Handle actual media recording start
+    }
+
+    var currentPartIndex = 0; 
+    console.log(currentPartIndex);
+    function speakingStopRecording() {
+        console.log("Recording stopped.");
+        $('#notification').hide();
+
+        currentPartIndex++;
+        var nextPartButton = $('.skill-part-btn[data-part-index="' + currentPartIndex + '"]');
+        console.log(nextPartButton.length);
+        if (nextPartButton.length > 0) {
+            nextPartButton.click();  // Simulate a click on the next part button
+        } else {
+            console.log("No more parts to display.");
+        }
+    }
+
+    // Optionally, handle form submission, etc.
+    $('#speaking-submitFormButton').click(function() {
+        console.log("Form submitted.");
+    });
+
+    function toggleTimerVisibility(skillType) {
+        console.log("Toggle timer visibility: " + skillType);
+        var skillTimer = document.getElementById('skill-timer');
+        var speakingSkillTimer = document.getElementById('speaking-skill-timer');
+        if (skillType == 'Speaking') {
+            if (skillTimer) skillTimer.style.display = 'none';
+            if (speakingSkillTimer) speakingSkillTimer.style.display = 'inline';
+        } else {
+            if (skillTimer) skillTimer.style.display = 'inline';
+            if (speakingSkillTimer) speakingSkillTimer.style.display = 'none';
+        }
+    }
+    
+    function getCurrentSkillName() {
+        var currentSkill = skillIds[currentSkillIndex];
+        var currentSkillName = $('.skill-' + currentSkill + '-part-Part_1').closest('form').attr('action');
+        if (currentSkillName.includes('Speaking')) {
+            return "Speaking";
+        }
+    }
+    // =================================================================================================
+    // =================================================================================================
+    // =================================================================================================
+    // =================================================================================================
+    
     // $('#submitTestButton').click(function () {
     //     $('#testForm').submit();
     // });
@@ -335,103 +553,6 @@ $(document).ready(function () {
 
 });
 
-// Ngăn chặn các tổ hợp phím phổ biến mở Developer Tools
-// document.addEventListener('keydown', function (event) {
-//     if (event.keyCode == 123) { // F12
-//         event.preventDefault();
-//     } else if (event.ctrlKey && event.shiftKey && event.keyCode == 73) { // Ctrl+Shift+I
-//         event.preventDefault();
-//     } else if (event.ctrlKey && event.shiftKey && event.keyCode == 74) { // Ctrl+Shift+J
-//         event.preventDefault();
-//     } else if (event.ctrlKey && event.keyCode == 85) { // Ctrl+U
-//         event.preventDefault();
-//     } else if (event.ctrlKey && event.keyCode == 83) { // Ctrl+S
-//         event.preventDefault();
-//     } else if (event.ctrlKey && event.keyCode == 80) { // Ctrl+P
-//         event.preventDefault();
-//     }
-// });
-//Not allow to hightlight
-document.addEventListener('selectstart', function (e) {
-    if (e.target.classList.contains('body')) {
-        e.preventDefault(); // Ngăn chặn việc chọn văn bản cho các phần tử có class 'no-select'
-    }
-});
-
-// Ngăn chặn chuột phải
-document.addEventListener('contextmenu', function (event) {
-    event.preventDefault();
-});
-
-// Ngăn chặn các hành động copy, cut, paste
-document.addEventListener('copy', function (event) {
-    event.preventDefault();
-});
-
-document.addEventListener('cut', function (event) {
-    event.preventDefault();
-});
-
-document.addEventListener('paste', function (event) {
-    event.preventDefault();
-});
-
-// Ngăn chặn chọn văn bản
-document.addEventListener('selectstart', function (event) {
-    event.preventDefault();
-});
-
-// Phương pháp phát hiện Developer Tools
-function detectDevTools() {
-    const element = new Image();
-    Object.defineProperty(element, 'id', {
-        get: function () {
-            alert('Developer Tools are not allowed.');
-            window.location.reload();
-        }
-    });
-    // console.log(element);
-}
-
-setInterval(detectDevTools, 1000);
-
-// Ngăn chặn menu chuột phải bổ sung
-document.addEventListener('mousedown', function (event) {
-    if (event.button === 2 || event.button === 3) {
-        event.preventDefault();
-    }
-});
-
-// Disable text selection CSS
-document.documentElement.style.userSelect = 'none';
-document.documentElement.style.msUserSelect = 'none';
-document.documentElement.style.mozUserSelect = 'none';
-
-document.addEventListener('DOMContentLoaded', function () {
-    var audio = document.getElementById('audioPlayer');
-
-    audio.addEventListener('play', function () {
-        // Vô hiệu hóa thanh tiến trình khi âm thanh đang phát
-        disableSeekBar();
-    });
-
-    function disableSeekBar() {
-        audio.addEventListener('seeking', preventSeeking);
-    }
-
-    function preventSeeking(event) {
-        // Ngăn chặn tua tới lui khi âm thanh đang phát
-        if (!audio.paused) {
-            event.preventDefault();
-            audio.currentTime = audio.currentTime; // Giữ nguyên thời gian hiện tại
-        }
-    }
-
-    // Xóa sự kiện ngăn chặn tua khi âm thanh bị tạm dừng
-    audio.addEventListener('pause', function () {
-        audio.removeEventListener('seeking', preventSeeking);
-    });
-});
 
 $(document).ready(function () {
     $('#save-btn').click(function (e) {

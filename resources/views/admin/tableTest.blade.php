@@ -40,21 +40,12 @@
                                 <th>End Date</th>
                                 <th>Lecturer Name</th>
                                 <th>Test Code</th>
-                                <th>Test Type</th>
+                                <th>Test Status</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($tests as $test)
-                                @php
-                                    if ($test->test_type == 'exam') {
-                                        $testType = 'Exam';
-                                    } elseif ($test->test_type == 'progressTest') {
-                                        $testType = 'Progress Test';
-                                    } else {
-                                        $testType = 'Trial Test';
-                                    }
-                                @endphp
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $test->test_name }}</td>
@@ -63,7 +54,12 @@
                                     <td>{{ $test->end_date }}</td>
                                     <td>{{ $test->instructor->name }}</td>
                                     <td>{{ $test->test_code }}</td>
-                                    <td>{{ $testType }}</td>
+                                    @if ($test->test_status == "Active")
+                                        <td><div class="badge bg-success">{{ $test->test_status }}</div></td>
+                                    @else
+                                        <td><div class="badge bg-warning">{{ $test->test_status }}</div></td>
+                                    @endif
+                                    
                                     <td>
                                         <a href="{{ route('test.edit', $test->slug) }}"><i
                                                 class="mdi mdi-lead-pencil mdi-24px"></i></a>

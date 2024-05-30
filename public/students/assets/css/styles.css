@@ -128,3 +128,6 @@ audio {
     width: 100%; /* Đảm bảo nút mở rộng chiếm đầy chiều rộng có sẵn */
 }
 
+.notification{
+    margin-top: 10px;
+}

@@ -68,24 +68,18 @@
                                         </div>
                                     </div>
                                     <div class="row mb-2">
-                                        <label class="col-md-2 col-form-label" for="example-choose">Test Type</label>
+                                        <label class="col-md-2 col-form-label" for="example-choose">Test Status</label>
                                         <div class="col-md-10">
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="test_type" id="progressTest" value="progressTest" {{ isset($test_slug) && $test_slug->test_type == 'progressTest' ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="progressTest">
-                                                    Progress Test
+                                                <input class="form-check-input" type="radio" name="test_status" id="Active" value="Active" {{ isset($test_slug) && $test_slug->test_status == 'Active' ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="Active">
+                                                    Active
                                                 </label>
                                             </div>
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="test_type" id="exam" value="exam" {{ isset($test_slug) && $test_slug->test_type == 'exam' ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="exam">
-                                                    Exam
-                                                </label>
-                                            </div>
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="test_type" id="trialTest" value="trialTest" {{ isset($test_slug) && $test_slug->test_type == 'trialTest' ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="trialTest">
-                                                    Trial Test
+                                                <input class="form-check-input" type="radio" name="test_status" id="Inactive" value="Inactive" {{ isset($test_slug) && $test_slug->test_status == 'Inactive' ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="Inactive">
+                                                    Inactive
                                                 </label>
                                             </div>
                                         </div>

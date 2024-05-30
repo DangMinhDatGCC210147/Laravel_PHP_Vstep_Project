@@ -142,7 +142,7 @@
                     </div>
                     <div class="card-body">
                         <div class="mb-3">
-                            <label class="form-label">Requirement</label>
+                            <label class="form-label">Follow Up Question</label>
                             <input type="text" name="part3_question" class="form-control"
                                 value="{{ $questions[3]->question_text }}" required>
                         </div>

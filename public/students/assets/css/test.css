@@ -3,6 +3,7 @@ html, body {
     margin: 0;
     padding: 0;
     /* overflow-y: hidden; */
+    font-size: 15px !important;
 }
 .overflow-auto {
     overflow-y: auto !important;
@@ -85,4 +86,48 @@ html, body {
     /* Smaller font size for timer */
     color: #ffffff;
     /* Lighter text color for less emphasis */
+}
+
+.flash-red {
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    0% {
+        color: red;
+    }
+
+    100% {
+        color: transparent;
+    }
+}
+
+
+.image-avatar{
+    background-color: #ffffff;
+    height: 250px;
+    width: 250px;
+}
+
+.image-avatar img{
+    height: 230px;
+}
+
+.caution, #prepTimer{
+    margin: 10px 0 10px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#prepTimer{
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.note{
+    margin: 5px 0 5px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
